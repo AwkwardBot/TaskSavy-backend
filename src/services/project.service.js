@@ -8,13 +8,12 @@ const ApiError = require('../utils/ApiError');
  * @returns {Promise<Project>}
  * 
  */
-const createProject = async (projectBody, user) => {
+const createProject = async (projectBody, userId) => {
 
-  const adminMember = {
-      userId: user._id, 
+  projectBody.members = [{
+      userId: userId, 
       role: 'Admin',
-  };
-  projectBody.members = [adminMember];
+  }];
 
   return Project.create(projectBody);
 };

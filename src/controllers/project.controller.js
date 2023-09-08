@@ -6,7 +6,7 @@ const { projectService } = require('../services');
 
 
 const createProject = catchAsync(async (req, res) => {
-  const project = await projectService.createProject(req.body, req.user);
+  const project = await projectService.createProject(req.body, req.user._id);
   res.status(httpStatus.CREATED).send(project);
 });
 
@@ -131,8 +131,5 @@ module.exports = {
   addBoard,
   removeBoard,
   updateTag
-
-
-
   
 };
