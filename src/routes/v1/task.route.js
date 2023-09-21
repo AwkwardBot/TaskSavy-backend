@@ -1,5 +1,5 @@
 const express = require('express');
-const projectController = require('../../controllers/project.controller');
+const { taskController } = require('../../controllers');
 const auth = require('../../middlewares/auth');
 const reqLog = require('../../middlewares/reqLogger')
 
@@ -21,7 +21,12 @@ module.exports = router;
 
 /**
  * @swagger
- * /tasks/new
+ * /tasks/new:
  *   post:
+ *     summary: Add a new Task
+ *     description: Add a new to task to a sprint
+ *     tags: [Tasks]
+ *     security:
+ *       - bearerAuth: []
  *     
  */

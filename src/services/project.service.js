@@ -164,7 +164,7 @@ const addTag = async (projectId, userId, tag) => {
  */
 
 
-const removeTag = async (projectId, userId, tag) => {
+const deleteTag = async (projectId, userId, tag) => {
 
   const project = await getProjectById(projectId, userId)
 
@@ -178,13 +178,17 @@ const removeTag = async (projectId, userId, tag) => {
 
  };
 
+ /**
+  * 
+  * @param {*} projectId 
+  * @param {*} userId 
+  * @param {*} tagUpdate 
+  * @returns 
+  */
+
 const updateTag = async (projectId, userId, tagUpdate) => {
 
   const project = await getProjectById(projectId, userId)
-
-  if (!project){
-    throw new ApiError(httpStatus.NOT_FOUND, 'Project does not exist');
-  }
 
   if (project.members.some(member => member.userId.equals(userId) && member.role === 'Member')){
     throw new ApiError(httpStatus.FORBIDDEN, 'User does not have permission to edit tags');
@@ -206,6 +210,35 @@ const updateTag = async (projectId, userId, tagUpdate) => {
 };
 
 
+const getMembers = async (projectId, userId) => {
+  const project = await getProjectById(projectId, userId);
+  return project.members
+
+};
+
+const getMemberById = async (projectId, userId, memberId) => {
+  
+  const project = await getProjectById(projectId, userId);
+  return project.members.find(m => m.id === memberId);
+
+}
+
+const searchMemberByName = async (projectId, userId, name) => {
+
+  const project = await getProjectById(projectId, userId);
+  return project.members.find(m => m.name === name);
+
+}
+
+const queryProject = async () => {
+  const projects = await Project.paginate(filter, options);
+  return projects;
+
+} 
+
+
+
+
 module.exports = {
   createProject,
   getProjects,
@@ -214,8 +247,9 @@ module.exports = {
   changeStatus,
   getTags,
   addTag,
-  removeTag,
+  deleteTag,
   getTag,
-  updateTag
+  updateTag,
+  getMembers
 
 };

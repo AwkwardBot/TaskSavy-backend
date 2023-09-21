@@ -77,9 +77,9 @@ const addTag = catchAsync(async (req, res) => {
   
 });
 
-const removeTag = catchAsync(async (req, res) => {
+const deleteTag = catchAsync(async (req, res) => {
 
-  await projectService.removeTag(req.params.projectId, req.user._id, req.body.tag)
+  await projectService.deleteTag(req.params.projectId, req.user._id, req.body.tag)
   res.status(httpStatus.NO_CONTENT).send();
 
 });
@@ -102,6 +102,11 @@ const getBoards = catchAsync(async (req, res) => {
   
 });
 
+const getBoard = catchAsync(async (req, res) => {
+
+  
+});
+
 const addBoard = catchAsync(async (req, res) => {
 
   // const boards = await projectService.addTag(req.params.projectId, req.user, req.body.tag)
@@ -111,10 +116,52 @@ const addBoard = catchAsync(async (req, res) => {
 
 const removeBoard = catchAsync(async (req, res) => {
 
-  await projectService.removeTag(req.param.projectId, req.user, req.body.tag)
+  await projectService.removeTag(req.param.projectId, req.user._id, req.body.board)
   res.status(httpStatus.NO_CONTENT).send();
 
 });
+
+const updateBoard = catchAsync(async (req,res) => {
+
+
+});
+
+
+
+const getMembers = catchAsync(async (req, res) => {
+
+  await projectServices
+
+});
+
+const addMembers = catchAsync(async (req,res) => {
+
+  for(member in req.body.members){
+    
+    await projectService.addMember(req.user._id, member)
+  }
+  res.status(httpStatus.NO_CONTENT).send()
+  
+});
+
+const getMemberById = catchAsync(async (req,res) => {
+
+  
+
+
+});
+
+
+const deleteMember = catchAsync(async (req,res) => {
+
+
+});
+
+const changeMemberRole = catchAsync(async (req, res) => {
+
+
+});
+
 
 
 module.exports = {
@@ -126,10 +173,20 @@ module.exports = {
   changeStatus,
   getTags,
   addTag,
-  removeTag,
+  deleteTag,
   getBoards,
+  getBoard,
   addBoard,
   removeBoard,
-  updateTag
+  updateBoard,
+
+  updateTag,
+
+  getMembers,
+  addMembers,
+  getMemberById,
+  deleteMember,
+  changeMemberRole
+
   
 };
