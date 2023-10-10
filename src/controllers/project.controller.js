@@ -12,6 +12,7 @@ const createProject = catchAsync(async (req, res) => {
 
 
 
+
 const getProjects = catchAsync(async (req, res) => {
   const projects = await projectService.getProjects(req.user._id)
   if(!projects) {

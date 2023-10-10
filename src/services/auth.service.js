@@ -90,10 +90,24 @@ const verifyEmail = async (verifyEmailToken) => {
   }
 };
 
+const SocialLogin = async (email, socialType, profileId) => {
+  var user = await userService.getUserByEmail(email);
+    if(user && !(await user.isSocialConnected(socialType))) {
+      user = await userService.connectSocial(user, socialType, profileId)
+    }
+  
+    
+    
+  return user;
+
+
+}
+
 module.exports = {
   loginUserWithEmailAndPassword,
   logout,
   refreshAuth,
   resetPassword,
   verifyEmail,
+  SocialLogin
 };

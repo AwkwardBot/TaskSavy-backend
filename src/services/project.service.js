@@ -4,240 +4,210 @@ const ApiError = require('../utils/ApiError');
 
 /**
  * Create a new Project
- * @param {Object} projectBody 
+ * @param {Object} projectBody
  * @returns {Promise<Project>}
- * 
+ *
  */
 const createProject = async (projectBody, userId) => {
-
-  projectBody.members = [{
-      userId: userId, 
+  projectBody.members = [
+    {
+      userId: userId,
       role: 'Admin',
-  }];
+    },
+  ];
 
   return Project.create(projectBody);
 };
 
 /**
  * Retuen all projects of the authenticated user
- * @param {Object} userId 
- * @returns {Array<Project>} 
+ * @param {Object} userId
+ * @returns {Array<Project>}
  */
 
 const getProjects = async (userId) => {
-
-  return projects = await Project.find({
+  return (projects = await Project.find({
     'members.userId': userId,
-  })
-}
- 
+  }));
+};
 
 /**
- * 
- * @param {Object} projectId 
- * @param {Object} userId 
+ *
+ * @param {Object} projectId
+ * @param {Object} userId
  * @returns {Promise<Project>}
  */
 
 const getProjectById = async (projectId, userId) => {
   const project = Project.findOne({
-    '_id': projectId,
+    _id: projectId,
     'members.userId': userId,
   });
-  if (!project){
+  if (!project) {
     throw new ApiError(httpStatus.NOT_FOUND, 'Project does not exist');
   }
 
-  return project
-}
+  return project;
+};
 
-
-const updateProjectById = async (id) => {
-  
-}
-
+const updateProjectById = async (id) => {};
 
 /**
  * Change the active status of a project.
- * @param {ObjectId} projectId 
- * @param {ObjectId} userId 
- * @param {ObjectId} status 
+ * @param {ObjectId} projectId
+ * @param {ObjectId} userId
+ * @param {ObjectId} status
  * @returns {Promise<Project>}
  * @throws {ApiError}
  */
 
 const changeActiveStatus = async (projectId, userId, status) => {
-
-  const project = await getProjectById(projectId, userId)
-  if(!project){
+  const project = await getProjectById(projectId, userId);
+  if (!project) {
     throw new ApiError(httpStatus.NOT_FOUND, 'Project not found or user does not have access to the project');
   }
-  console.log(project)
-  if (!project.members.some(member => member.userId.equals(userId) && member.role === 'Admin')){
+  console.log(project);
+  if (!project.members.some((member) => member.userId.equals(userId) && member.role === 'Admin')) {
     throw new ApiError(httpStatus.FORBIDDEN, 'User does not have permission to change active status ');
-    
   }
 
-    project.activeStatus = status
-    await project.save()
-    return project
-
-}
+  project.activeStatus = status;
+  await project.save();
+  return project;
+};
 
 /**
  * Change the working status of a project.
- * @param {ObjectId} projectId 
- * @param {ObjectId} userId 
- * @param {ObjectId} status 
+ * @param {ObjectId} projectId
+ * @param {ObjectId} userId
+ * @param {ObjectId} status
  * @returns {Promise<Project>}
  * @throws {ApiError}
  */
 
 const changeStatus = async (projectId, userId, status) => {
-  const project = await getProjectById(projectId, userId)
-  if(!project){
+  const project = await getProjectById(projectId, userId);
+  if (!project) {
     throw new ApiError(httpStatus.NOT_FOUND, 'Project not found or user does not have access to the project');
   }
-  if (!project.members.some(member => member.userId.equals(userId) && (member.role === 'Admin' || member.role === 'Manager'))){
+  if (
+    !project.members.some((member) => member.userId.equals(userId) && (member.role === 'Admin' || member.role === 'Manager'))
+  ) {
     throw new ApiError(httpStatus.FORBIDDEN, 'User does not have permission to change working status ');
-    
   }
 
-    project.status = status
-    await project.save()
-    return project
-
-}
+  project.status = status;
+  await project.save();
+  return project;
+};
 
 /**
- * 
- * @param {Object} projectId 
- * @param {Object} userId 
+ *
+ * @param {Object} projectId
+ * @param {Object} userId
  * @returns {Promise<Project>}
  */
 
 const getTags = async (projectId, userId) => {
-
-  const project = await getProjectById(projectId, userId)
-  console.log("project: ", project)
-  return project.tags
-
-}
+  const project = await getProjectById(projectId, userId);
+  console.log('project: ', project);
+  return project.tags;
+};
 
 const getTag = async (projectId, userId, tag) => {
+  const project = await getProjectById(projectId, userId);
 
-  const project = await getProjectById(projectId, userId)
-  
-  return project.tags.find(t => t.name === tag);
-
-
-}
+  return project.tags.find((t) => t.name === tag);
+};
 
 /**
  * Add a custom tag to the project
- * @param {*} projectId 
- * @param {*} userId 
+ * @param {*} projectId
+ * @param {*} userId
  * @returns {Promise<Project>}
  * @throws {ApiError}
  */
 
 const addTag = async (projectId, userId, tag) => {
+  const project = await getProjectById(projectId, userId);
 
-  const project = await getProjectById(projectId, userId)
-
-  if (project.members.some(member => member.userId.equals(userId) && member.role === 'Member')){
+  if (project.members.some((member) => member.userId.equals(userId) && member.role === 'Member')) {
     throw new ApiError(httpStatus.FORBIDDEN, 'User does not have permission to add tags');
   }
 
   project.tags.push(tag);
   await project.save();
   return project;
-
-}
+};
 
 /**
  * Remove a tag from the project
- * @param {*} projectId 
- * @param {*} userId 
+ * @param {*} projectId
+ * @param {*} userId
  * @returns {Promise<Project>}
  * @throws {ApiError}
  */
 
-
 const deleteTag = async (projectId, userId, tag) => {
+  const project = await getProjectById(projectId, userId);
 
-  const project = await getProjectById(projectId, userId)
-
-  if (project.members.some(member => member.userId.equals(userId) && member.role === 'Member')){
+  if (project.members.some((member) => member.userId.equals(userId) && member.role === 'Member')) {
     throw new ApiError(httpStatus.FORBIDDEN, 'User does not have permission to remove tags');
   }
 
-  project.tags = project.tags.filter(tags => tags !== tag)
+  project.tags = project.tags.filter((tags) => tags !== tag);
   await project.save();
   return project;
+};
 
- };
-
- /**
-  * 
-  * @param {*} projectId 
-  * @param {*} userId 
-  * @param {*} tagUpdate 
-  * @returns 
-  */
+/**
+ *
+ * @param {*} projectId
+ * @param {*} userId
+ * @param {*} tagUpdate
+ * @returns {Promise<Tag>}
+ */
 
 const updateTag = async (projectId, userId, tagUpdate) => {
+  const project = await getProjectById(projectId, userId);
 
-  const project = await getProjectById(projectId, userId)
-
-  if (project.members.some(member => member.userId.equals(userId) && member.role === 'Member')){
+  if (project.members.some((member) => member.userId.equals(userId) && member.role === 'Member')) {
     throw new ApiError(httpStatus.FORBIDDEN, 'User does not have permission to edit tags');
   }
 
-  const tag =await getTag(projectId, userId, tagUpdate.old)
-  if (!tag == -1){
+  const tag = await getTag(projectId, userId, tagUpdate.old);
+  if (!tag == -1) {
     throw new ApiError(httpStatus.NOT_FOUND, 'Tag does not exist');
   }
 
-  console.log(tag)
+  console.log(tag);
 
-  tag.name = tagUpdate.new
-  console.log("updated: ", tag)
-  project.save()
-  console.log(project)
-  return tag
-
+  tag.name = tagUpdate.new;
+  console.log('updated: ', tag);
+  project.save();
+  console.log(project);
+  return tag;
 };
-
 
 const getMembers = async (projectId, userId) => {
   const project = await getProjectById(projectId, userId);
-  return project.members
-
+  return project.members;
 };
 
 const getMemberById = async (projectId, userId, memberId) => {
-  
   const project = await getProjectById(projectId, userId);
-  return project.members.find(m => m.id === memberId);
-
-}
+  return project.members.find((m) => m.id === memberId);
+};
 
 const searchMemberByName = async (projectId, userId, name) => {
-
   const project = await getProjectById(projectId, userId);
-  return project.members.find(m => m.name === name);
-
-}
+  return project.members.find((m) => m.name === name);
+};
 
 const queryProject = async () => {
   const projects = await Project.paginate(filter, options);
   return projects;
-
-} 
-
-
-
+};
 
 module.exports = {
   createProject,
@@ -250,6 +220,5 @@ module.exports = {
   deleteTag,
   getTag,
   updateTag,
-  getMembers
-
+  getMembers,
 };

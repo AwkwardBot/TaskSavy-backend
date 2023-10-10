@@ -18,13 +18,17 @@ const envVarsSchema = Joi.object()
     JWT_VERIFY_EMAIL_EXPIRATION_MINUTES: Joi.number()
       .default(10)
       .description('minutes after which verify email token expires'),
+    GOOGLE_CLIENT_ID: Joi.string().required().description('Google OAUTH Client ID'),
+    GOOGLE_CLIENT_SECRET: Joi.string().required().description('Google OAUTH Secret Key'),
+    GITHUB_CLIENT_ID: Joi.string().required().description('GITHUB Secret Key'),
+    GITHUB_CLIENT_SECRET: Joi.string().required().description('GITHUB Secret Key'),
     SMTP_HOST: Joi.string().description('server that will send the emails'),
     SMTP_PORT: Joi.number().description('port to connect to the email server'),
     SMTP_USERNAME: Joi.string().description('username for email server'),
     SMTP_PASSWORD: Joi.string().description('password for email server'),
     EMAIL_FROM: Joi.string().description('the from field in the emails sent by the app'),
   })
-  .unknown();
+  .unknown(true);
 
 const { value: envVars, error } = envVarsSchema.prefs({ errors: { label: 'key' } }).validate(process.env);
 
@@ -35,6 +39,10 @@ if (error) {
 module.exports = {
   env: envVars.NODE_ENV,
   port: envVars.PORT,
+  google_client_id: envVars.GOOGLE_CLIENT_ID,
+  google_client_secret: envVars.GOOGLE_CLIENT_SECRET,
+  github_client_id: envVars.GITHUB_CLIENT_ID,
+  github_client_secret: envVars.GITHUB_CLIENT_SECRET,
   mongoose: {
     url: envVars.MONGODB_URL + (envVars.NODE_ENV === 'test' ? '-test' : ''),
     options: {

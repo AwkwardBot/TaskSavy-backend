@@ -82,6 +82,26 @@ const deleteUserById = async (userId) => {
   return user;
 };
 
+const connectSocial = async (user, socialType, profileId) => {
+
+  if(socialType == 'google'){
+    user.google = profileId
+  }
+
+  else if(socialType == 'github'){
+    user.github = profileId
+  }
+
+  else{
+    throw new ApiError(httpStatus.BAD_REQUEST, 'Invalid value for socialType')
+  }
+
+  await user.save()
+  return user
+  
+
+}
+
 module.exports = {
   createUser,
   queryUsers,
@@ -89,4 +109,5 @@ module.exports = {
   getUserByEmail,
   updateUserById,
   deleteUserById,
+  connectSocial
 };

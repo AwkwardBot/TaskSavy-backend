@@ -25,7 +25,7 @@ const userSchema = mongoose.Schema(
     },
     password: {
       type: String,
-      required: true,
+      required: false,
       trim: true,
       minlength: 8,
       validate(value) {
@@ -48,9 +48,22 @@ const userSchema = mongoose.Schema(
         type: String,
         enum: [1, 2, 3],
         default: 1
-    }
+    },
+
+    google: {
+      type: String,
+      required: false
+    },
+
+    github: {
+      type: String,
+      required: false
+    },
+
+
 
   },
+  
   {
     timestamps: true,
   }
@@ -80,6 +93,22 @@ userSchema.methods.isPasswordMatch = async function (password) {
   const user = this;
   return bcrypt.compare(password, user.password);
 };
+
+userSchema.methods.isSocialConnected = async function( social) {
+
+  const user = this;
+
+  if(social == 'google'){
+    return user.google != null
+  }
+
+  if(social == 'github'){
+    return user.github != null
+  }
+
+  return false
+
+}
 
 
 userSchema.pre('save', async function (next) {
