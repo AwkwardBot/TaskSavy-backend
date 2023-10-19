@@ -1,16 +1,13 @@
 const express = require('express');
 const { taskController } = require('../../controllers');
 const auth = require('../../middlewares/auth');
-const reqLog = require('../../middlewares/reqLogger')
+const reqLog = require('../../middlewares/reqLogger');
 
 const router = express.Router();
 
-router.post('/new', auth(),  )
-
-
+router.post('/new', auth());
 
 module.exports = router;
-
 
 /**
  * @swagger
@@ -28,5 +25,5 @@ module.exports = router;
  *     tags: [Tasks]
  *     security:
  *       - bearerAuth: []
- *     
+ *
  */

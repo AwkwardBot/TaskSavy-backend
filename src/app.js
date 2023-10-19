@@ -5,11 +5,11 @@ const compression = require('compression');
 const cors = require('cors');
 const passport = require('passport');
 const httpStatus = require('http-status');
+const GoogleStrategy = require('passport-google-oidc').Strategy;
+const GitHubStrategy = require('passport-github').Strategy;
 const config = require('./config/config');
 const morgan = require('./config/morgan');
 const { jwtStrategy } = require('./config/passport');
-const GoogleStrategy = require('passport-google-oidc').Strategy;
-const GitHubStrategy = require('passport-github').Strategy;
 const { authLimiter } = require('./middlewares/rateLimiter');
 const routes = require('./routes/v1');
 const { errorConverter, errorHandler } = require('./middlewares/error');
@@ -47,42 +47,40 @@ app.use(require('express-session')({ secret: 'keyboard cat', resave: true, saveU
 
 // jwt authentication
 app.use(passport.initialize());
-app.use (passport.session())
+app.use(passport.session());
 
 passport.use('jwt', jwtStrategy);
 
-passport.use(new GoogleStrategy({
-  clientID: config.google_client_id,
-  clientSecret: config.google_client_secret,
-  callbackURL: "http://localhost:3000/auth/google/callback",
-},
-async function(refreshToken, profile, accessToken, done) {
+passport.use(
+  new GoogleStrategy(
+    {
+      clientID: config.google_client_id,
+      clientSecret: config.google_client_secret,
+      callbackURL: 'http://localhost:3000/auth/google/callback',
+    },
+    async function (refreshToken, profile, accessToken, done) {
+      const data = await authController.googleLogin(profile);
 
-   var data =  await authController.googleLogin(profile)
+      const { user } = data;
+      const { tokens } = data;
 
-   const user = data.user
-   const tokens = data.tokens
-  
-  done(null, {user, tokens})
+      done(null, { user, tokens });
+    }
+  )
+);
 
-}
-  
-));
+app.get('/auth/google', passport.authenticate('google', { scope: ['profile', 'email'] }));
 
+app.get(
+  '/auth/google/callback',
+  passport.authenticate('google', { failureRedirect: 'http://localhost:3000/v1/docs' }),
+  function (req, res) {
+    const { user } = req;
+    const { tokens } = req;
 
-
-app.get('/auth/google',
-  passport.authenticate('google', { scope: ['profile', 'email'] }));
-
-app.get('/auth/google/callback', 
-   passport.authenticate('google', { failureRedirect: 'http://localhost:3000/v1/docs' }),
-  function(req, res) {
-    
-    const user = req.user
-    const tokens = req.tokens
-    
     res.status(httpStatus.OK).send({ user, tokens });
-  });
+  }
+);
 
 // limit repeated failed requests to auth endpoints
 if (config.env === 'production') {
@@ -97,38 +95,33 @@ passport.deserializeUser((user, done) => {
   done(null, user);
 });
 
+passport.use(
+  new GitHubStrategy(
+    {
+      clientID: config.github_client_id,
+      clientSecret: config.github_client_secret,
+      callbackURL: 'http://localhost:3000/auth/github/callback',
+    },
+    async function (refreshToken, accessToken, profile, done) {
+      console.log('P: ', profile);
+      console.log('AT: ', accessToken);
+      console.log('RT: ', refreshToken);
+      const data = await authController.githubLogin(profile);
 
-passport.use(new GitHubStrategy({
-  clientID: config.github_client_id,
-  clientSecret: config.github_client_secret,
-  callbackURL: "http://localhost:3000/auth/github/callback"
-},
-async function(refreshToken, accessToken, profile, done) {
+      const { user } = data;
+      const { tokens } = data;
 
-  console.log("P: ", profile)
-  console.log("AT: ", accessToken)
-  console.log("RT: ", refreshToken)
-  var data =  await authController.githubLogin(profile)
+      done(null, { user, tokens });
+    }
+  )
+);
 
+app.get('/auth/github', passport.authenticate('github', { scope: ['user:email'] }));
 
-   const user = data.user
-   const tokens = data.tokens
-  
-  done(null, {user, tokens})
-
-}
-));
-
-app.get('/auth/github',
-  passport.authenticate('github', { scope: [ 'user:email' ] }));
-
-app.get('/auth/github/callback', 
-  passport.authenticate('github', { failureRedirect: 'v1/docs' }),
-  function(req, res) {
-    // Successful authentication, redirect home.
-    res.send(httpStatus[200]).send(req);
-  });
-
+app.get('/auth/github/callback', passport.authenticate('github', { failureRedirect: 'v1/docs' }), function (req, res) {
+  // Successful authentication, redirect home.
+  res.send(httpStatus[200]).send(req);
+});
 
 // v1 api routes
 app.use('/v1', routes);

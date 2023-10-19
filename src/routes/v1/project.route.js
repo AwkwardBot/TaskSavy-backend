@@ -3,73 +3,74 @@ const auth = require('../../middlewares/auth');
 const validate = require('../../middlewares/validate');
 const reqLog = require('../../middlewares/reqLogger');
 const { projectController } = require('../../controllers');
-const { projectValidation } = require('../../validations')
+const { projectValidation } = require('../../validations');
+const httpStatus = require('http-status');
 
 const router = express.Router();
 
 router
-    .route('/')
-    .post(auth(), validate(projectValidation.createProject),  projectController.createProject)
-    .get(auth(), projectController.getProjects)
+  .route('/')
+  .post(auth(), validate(projectValidation.createProject), projectController.createProject)
+  .get(auth(), projectController.getProjects);
 
-
-router.get('/:projectId', auth(), validate(projectValidation.projectId),  projectController.getProject);
+router.get('/:projectId', auth(), validate(projectValidation.projectId), projectController.getProject);
 
 // Tags
 
-
 router
-    .route('/:projectId/tags')
-    .get(auth(), validate(projectValidation.projectId), projectController.getTags)
-    .patch(auth(), validate(projectValidation.createDeleteTag), projectController.addTag)
-    .delete(auth(), validate(projectValidation.createDeleteTag), projectController.deleteTag)
-    .put(auth(), validate(projectValidation.updateTag), projectController.updateTag)
+  .route('/:projectId/tags')
+  .get(auth(), validate(projectValidation.projectId), projectController.getTags)
+  .patch(auth(), validate(projectValidation.createDeleteTag), projectController.addTag)
+  .delete(auth(), validate(projectValidation.createDeleteTag), projectController.deleteTag)
+  .put(auth(), validate(projectValidation.updateTag), projectController.updateTag);
 
 // Active Status
-router.patch('/:projectId/active-status/update', auth(), validate(projectValidation.changeStatus), projectController.changeActiveStatus);
+router.patch(
+  '/:projectId/active-status/update',
+  auth(),
+  validate(projectValidation.changeStatus),
+  projectController.changeActiveStatus
+);
 router.patch('/:projectId/status/update', auth(), validate(projectValidation.changeStatus), projectController.changeStatus);
 
 // Boards
 router
-    .route('/:projectId/boards')
-    .get(auth(), validate(projectValidation.projectId),  projectController.getBoards)
-    .post(auth(), validate(projectValidation.projectId),  projectController.addBoard)
+  .route('/:projectId/boards')
+  .get(auth(), validate(projectValidation.projectId), projectController.getBoards)
+  .post(auth(), validate(projectValidation.projectId), projectController.addBoard);
 
 router
-    .route('/:projectId/boards/:board')
-    .get(auth(), validate(projectValidation.projectId), projectController.getBoard)
-    .delete(auth(), validate(projectValidation.projectId),  projectController.removeBoard)
-    .patch(auth(), validate(projectValidation.projectId),  projectController.updateBoard)
-    
-
+  .route('/:projectId/boards/:board')
+  .get(auth(), validate(projectValidation.projectId), projectController.getBoard)
+  .delete(auth(), validate(projectValidation.projectId), projectController.removeBoard)
+  .patch(auth(), validate(projectValidation.projectId), projectController.updateBoard);
 
 // Members
 router
-    .route('/:projectId/members')
-    .get(auth(), validate(projectValidation.projectId), projectController.getMembers)
-    .patch(auth(), validate(projectValidation.projectId), projectController.addMembers)
-    
+  .route('/:projectId/members')
+  .get(auth(), validate(projectValidation.projectId), projectController.getMembers)
+  .patch(auth(), validate(projectValidation.projectId), projectController.addMembers);
+
 router
-    .route('/:projectId/members:memberId')
-    .get(auth(), validate(projectValidation.memberId), projectController.getMemberById)
-    .delete(auth(), validate(projectValidation.memberId), projectController.deleteMember)
-    .patch(auth(), validate(projectValidation.changeMemberRole), projectController.changeMemberRole)
+  .route('/:projectId/members:memberId')
+  .get(auth(), validate(projectValidation.memberId), projectController.getMemberById)
+  .delete(auth(), validate(projectValidation.memberId), projectController.deleteMember)
+  .patch(auth(), validate(projectValidation.changeMemberRole), projectController.changeMemberRole);
+
 
 module.exports = router;
-
-
 
 /**
  * @swagger
  * tags:
  *   - name: Projects
- *     description: Project Management and Retrieval 
- *   - name: Tags 
+ *     description: Project Management and Retrieval
+ *   - name: Tags
  *     description: Projects's Tag Management and Retrieval
  *   - name: Project Members
- *     description: Project's Members Management and Retrieval 
- * 
- */    
+ *     description: Project's Members Management and Retrieval
+ *
+ */
 
 /**
  * @swagger
@@ -125,7 +126,7 @@ module.exports = router;
  *     tags: [Projects]
  *     descriptions: Only authenticated users can retrieve their projects
  *     security:
- *       - bearerAuth: [] 
+ *       - bearerAuth: []
  *     responses:
  *       '200':
  *         description: OK
@@ -133,14 +134,14 @@ module.exports = router;
  *           application/json:
  *             schema:
  *               $ref: '#/components/schemas/Project'
- *               
+ *
  *       '401':
  *         $ref: '#/components/responses/Unauthorized'
  *       "403":
  *         $ref: '#/components/responses/Forbidden'
  *       "404":
  *         $ref: '#/components/responses/NotFound'
- *       
+ *
  */
 
 /**
@@ -151,7 +152,7 @@ module.exports = router;
  *     tags: [Projects]
  *     descriptions: Only authenticated users can fetch their project
  *     security:
- *       - bearerAuth: [] 
+ *       - bearerAuth: []
  *     parameters:
  *       - name: projectId
  *         in: path
@@ -166,14 +167,14 @@ module.exports = router;
  *           application/json:
  *             schema:
  *               $ref: '#/components/schemas/Project'
- *               
+ *
  *       '401':
  *         $ref: '#/components/responses/Unauthorized'
  *       "403":
  *         $ref: '#/components/responses/Forbidden'
  *       "404":
  *         $ref: '#/components/responses/NotFound'
- *       
+ *
  */
 
 /**
@@ -184,15 +185,15 @@ module.exports = router;
  *     tags: [Tags]
  *     description: Only project members can fetch the tags
  *     security:
- *       - bearerAuth: [] 
- *     parameters:     
+ *       - bearerAuth: []
+ *     parameters:
  *       - name: projectId
  *         in: path
  *         required: true
  *         schema:
  *           type: string
  *         description: Project id
- *         
+ *
  *     responses:
  *       '200':
  *         description: OK
@@ -200,15 +201,15 @@ module.exports = router;
  *           application/json:
  *             schema:
  *               $ref: '#/components/schemas/Project'
- *               
+ *
  *       '401':
  *         $ref: '#/components/responses/Unauthorized'
  *       "403":
  *         $ref: '#/components/responses/Forbidden'
  *       "404":
  *         $ref: '#/components/responses/NotFound'
- *       
- */ 
+ *
+ */
 
 /**
  * @swagger
@@ -218,8 +219,8 @@ module.exports = router;
  *     tags: [Tags]
  *     description: Only project members can fetch the tags
  *     security:
- *       - bearerAuth: [] 
- *     parameters:     
+ *       - bearerAuth: []
+ *     parameters:
  *       - name: projectId
  *         in: path
  *         required: true
@@ -247,16 +248,15 @@ module.exports = router;
  *           application/json:
  *             schema:
  *               $ref: '#/components/schemas/Project'
- *               
+ *
  *       '401':
  *         $ref: '#/components/responses/Unauthorized'
  *       "403":
  *         $ref: '#/components/responses/Forbidden'
  *       "404":
  *         $ref: '#/components/responses/NotFound'
- * 
+ *
  */
-
 
 /**
  * @swagger
@@ -266,7 +266,7 @@ module.exports = router;
  *     tags: [Projects]
  *     descriptions: Only admin can change the active status
  *     security:
- *       - bearerAuth: [] 
+ *       - bearerAuth: []
  *     parameters:
  *       - name: projectId
  *         in: path
@@ -284,7 +284,7 @@ module.exports = router;
  *               status:
  *                 type: string
  *                 enum: ['Active', 'Archive', 'Deleted']
- *             
+ *
  *     responses:
  *       '200':
  *         description: OK
@@ -292,16 +292,15 @@ module.exports = router;
  *           application/json:
  *             schema:
  *               $ref: '#/components/schemas/Project'
- *               
+ *
  *       '401':
  *         $ref: '#/components/responses/Unauthorized'
  *       "403":
  *         $ref: '#/components/responses/Forbidden'
  *       "404":
  *         $ref: '#/components/responses/NotFound'
- *       
+ *
  */
-
 
 /**
  * @swagger
@@ -311,7 +310,7 @@ module.exports = router;
  *     tags: [Projects]
  *     descriptions: Only admins and managers can change the active status
  *     security:
- *       - bearerAuth: [] 
+ *       - bearerAuth: []
  *     parameters:
  *       - name: projectId
  *         in: path
@@ -329,7 +328,7 @@ module.exports = router;
  *               status:
  *                 type: string
  *                 enum: ['Pending', 'Working', 'Completed']
- *             
+ *
  *     responses:
  *       '200':
  *         description: OK
@@ -337,12 +336,12 @@ module.exports = router;
  *           application/json:
  *             schema:
  *               $ref: '#/components/schemas/Project'
- *               
+ *
  *       '401':
  *         $ref: '#/components/responses/Unauthorized'
  *       "403":
  *         $ref: '#/components/responses/Forbidden'
  *       "404":
  *         $ref: '#/components/responses/NotFound'
- *       
+ *
  */

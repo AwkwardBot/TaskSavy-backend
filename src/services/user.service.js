@@ -72,7 +72,6 @@ const updateUserById = async (userId, updateBody) => {
  * @returns {Promise<User>}
  */
 
-
 const deleteUserById = async (userId) => {
   const user = await getUserById(userId);
   if (!user) {
@@ -83,24 +82,17 @@ const deleteUserById = async (userId) => {
 };
 
 const connectSocial = async (user, socialType, profileId) => {
-
-  if(socialType == 'google'){
-    user.google = profileId
+  if (socialType === 'google') {
+    user.google = profileId;
+  } else if (socialType === 'github') {
+    user.github = profileId;
+  } else {
+    throw new ApiError(httpStatus.BAD_REQUEST, 'Invalid value for socialType');
   }
 
-  else if(socialType == 'github'){
-    user.github = profileId
-  }
-
-  else{
-    throw new ApiError(httpStatus.BAD_REQUEST, 'Invalid value for socialType')
-  }
-
-  await user.save()
-  return user
-  
-
-}
+  await user.save();
+  return user;
+};
 
 module.exports = {
   createUser,
@@ -109,5 +101,5 @@ module.exports = {
   getUserByEmail,
   updateUserById,
   deleteUserById,
-  connectSocial
+  connectSocial,
 };

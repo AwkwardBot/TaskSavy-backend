@@ -10,10 +10,17 @@ const workspaceSchema = new mongoose.Schema({
   description: String,
   members: [
     {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: 'User',
+      userId: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'User',
+        required: true,
+      },
+      role: {
+        type: String,
+        enum: ['Admin', 'Manager', 'Member'],
+        required: true,
+      },
     },
-
   ],
 
   projects: [
@@ -27,7 +34,6 @@ const workspaceSchema = new mongoose.Schema({
     default: Date.now,
   },
 });
-
 
 const Workspace = mongoose.model('Workspace', workspaceSchema);
 

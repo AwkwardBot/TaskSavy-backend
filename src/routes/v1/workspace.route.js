@@ -1,24 +1,25 @@
 const express = require('express');
-const {  } = require('../../controllers');
+const {} = require('../../controllers');
 const auth = require('../../middlewares/auth');
-const reqLog = require('../../middlewares/reqLogger')
+const reqLog = require('../../middlewares/reqLogger');
 
 const router = express.Router();
 
+/* eslint-enable */
 router
     .route('/')
-    .get('/', auth(), )
-    .post('/', auth(),  )
+    .get(auth())
+    .post(auth());
 
+
+/* eslint-enable */
 router
     .route('/:id')
-    .put('/:id', auth(), )
-    .get('/:id', auth(), ) 
-    .delete('/:id', auth(), )
-
+    .put(auth())
+    .get(auth())
+    .delete(auth());
 
 module.exports = router;
-
 
 /**
  * @swagger
@@ -36,9 +37,9 @@ module.exports = router;
  *     tags: [Workspace]
  *     security:
  *       - bearerAuth: []
- * 
+ *
  *   get:
- *     
+ *
  */
 
 /**
@@ -50,12 +51,10 @@ module.exports = router;
  *     tags: [Workspace]
  *     security:
  *       - bearerAuth: []
- * 
+ *
  *   get:
- * 
+ *
  *   delete:
- *   
- *     
+ *
+ *
  */
-
-

@@ -45,25 +45,22 @@ const userSchema = mongoose.Schema(
       default: false,
     },
     plan: {
-        type: String,
-        enum: [1, 2, 3],
-        default: 1
+      type: String,
+      enum: [1, 2, 3],
+      default: 1,
     },
 
     google: {
       type: String,
-      required: false
+      required: false,
     },
 
     github: {
       type: String,
-      required: false
+      required: false,
     },
-
-
-
   },
-  
+
   {
     timestamps: true,
   }
@@ -94,22 +91,19 @@ userSchema.methods.isPasswordMatch = async function (password) {
   return bcrypt.compare(password, user.password);
 };
 
-userSchema.methods.isSocialConnected = async function( social) {
-
+userSchema.methods.isSocialConnected = async function (social) {
   const user = this;
 
-  if(social == 'google'){
-    return user.google != null
+  if (social === 'google') {
+    return user.google != null;
   }
 
-  if(social == 'github'){
-    return user.github != null
+  if (social === 'github') {
+    return user.github != null;
   }
 
-  return false
-
-}
-
+  return false;
+};
 
 userSchema.pre('save', async function (next) {
   const user = this;

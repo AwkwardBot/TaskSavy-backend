@@ -1,9 +1,7 @@
 const mongoose = require('mongoose');
 
-
-
 const sprintSchema = new mongoose.Schema({
-  name: {
+  title: {
     type: String,
     required: true,
   },
@@ -15,14 +13,28 @@ const sprintSchema = new mongoose.Schema({
     type: Date,
     required: true,
   },
+  actualStartDate: {
+    type: Date,
+  },
+  actualEndDate: {
+    type: Date,
+  },
+  status: {
+    type: String,
+    emum: ['Pending', 'Started', 'Finished'],
+    default: 'Pending '
+  },
   description: String,
+  projectId: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'Project'
+  },
   tasks: [
     {
       type: mongoose.Schema.Types.ObjectId,
       ref: 'Task',
     },
   ],
-  // You can add more fields as needed for your project.
 });
 
 const Sprint = mongoose.model('Sprint', sprintSchema);

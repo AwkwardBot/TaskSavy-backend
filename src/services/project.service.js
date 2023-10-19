@@ -20,15 +20,15 @@ const createProject = async (projectBody, userId) => {
 };
 
 /**
- * Retuen all projects of the authenticated user
+ * Return all projects of the authenticated user
  * @param {Object} userId
  * @returns {Array<Project>}
  */
 
 const getProjects = async (userId) => {
-  return (projects = await Project.find({
+  return Project.find({
     'members.userId': userId,
-  }));
+  });
 };
 
 /**
@@ -67,14 +67,36 @@ const changeActiveStatus = async (projectId, userId, status) => {
     throw new ApiError(httpStatus.NOT_FOUND, 'Project not found or user does not have access to the project');
   }
   console.log(project);
-  if (!project.members.some((member) => member.userId.equals(userId) && member.role === 'Admin')) {
-    throw new ApiError(httpStatus.FORBIDDEN, 'User does not have permission to change active status ');
-  }
+  checkRole(project, userId, 'Admin')
 
   project.activeStatus = status;
   await project.save();
   return project;
 };
+
+/**
+ * Check Role of a member
+ * @param {Object} project 
+ * @param {Object} userId 
+ * @param {String} role 
+ * @returns {Promise<Boolean>}
+ * @throws {ApiError}
+ */
+
+const checkRole = async(project, userId, role) => {
+  if (role == 'Admin' && !project.members.some((member) => member.userId.equals(userId) && member.role === 'Admin')) {
+    throw new ApiError(httpStatus.FORBIDDEN, 'User does not have permission to change active status ');
+  }
+
+  if (role == 'Manager' &&
+    !project.members.some((member) => member.userId.equals(userId) && (member.role === 'Admin' || member.role === 'Manager'))
+  ) {
+    throw new ApiError(httpStatus.FORBIDDEN, 'User does not have permission to change working status ');
+  }
+
+  return true
+
+}
 
 /**
  * Change the working status of a project.
@@ -90,11 +112,8 @@ const changeStatus = async (projectId, userId, status) => {
   if (!project) {
     throw new ApiError(httpStatus.NOT_FOUND, 'Project not found or user does not have access to the project');
   }
-  if (
-    !project.members.some((member) => member.userId.equals(userId) && (member.role === 'Admin' || member.role === 'Manager'))
-  ) {
-    throw new ApiError(httpStatus.FORBIDDEN, 'User does not have permission to change working status ');
-  }
+
+  checkRole(project, userId, 'Manager')
 
   project.status = status;
   await project.save();
@@ -102,7 +121,7 @@ const changeStatus = async (projectId, userId, status) => {
 };
 
 /**
- *
+ * Get all the tags of a project
  * @param {Object} projectId
  * @param {Object} userId
  * @returns {Promise<Project>}
@@ -114,10 +133,24 @@ const getTags = async (projectId, userId) => {
   return project.tags;
 };
 
+/**
+ * Get a single tag 
+ * @param {Object} projectId 
+ * @param {Object} userId 
+ * @param {Object} tag 
+ * @returns {Promise<Tag>}
+ */
+
 const getTag = async (projectId, userId, tag) => {
   const project = await getProjectById(projectId, userId);
 
-  return project.tags.find((t) => t.name === tag);
+  const tags  = project.tags.find((t) => t.name === tag);
+
+  if (!tags == -1) {
+    throw new ApiError(httpStatus.NOT_FOUND, 'Tag does not exist');
+  }
+
+  return tags
 };
 
 /**
@@ -171,17 +204,8 @@ const deleteTag = async (projectId, userId, tag) => {
 const updateTag = async (projectId, userId, tagUpdate) => {
   const project = await getProjectById(projectId, userId);
 
-  if (project.members.some((member) => member.userId.equals(userId) && member.role === 'Member')) {
-    throw new ApiError(httpStatus.FORBIDDEN, 'User does not have permission to edit tags');
-  }
-
   const tag = await getTag(projectId, userId, tagUpdate.old);
-  if (!tag == -1) {
-    throw new ApiError(httpStatus.NOT_FOUND, 'Tag does not exist');
-  }
-
   console.log(tag);
-
   tag.name = tagUpdate.new;
   console.log('updated: ', tag);
   project.save();
