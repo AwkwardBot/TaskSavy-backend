@@ -1,4 +1,5 @@
 const express = require('express');
+const passport = require('passport');
 const validate = require('../../middlewares/validate');
 const authValidation = require('../../validations/auth.validation');
 const authController = require('../../controllers/auth.controller');
@@ -14,6 +15,8 @@ router.post('/forgot-password', validate(authValidation.forgotPassword), authCon
 router.post('/reset-password', validate(authValidation.resetPassword), authController.resetPassword);
 router.post('/send-verification-email', auth(), authController.sendVerificationEmail);
 router.post('/verify-email', validate(authValidation.verifyEmail), authController.verifyEmail);
+
+router.get('/google', passport.authenticate('google', { scope: ['profile', 'email'] }));
 
 module.exports = router;
 

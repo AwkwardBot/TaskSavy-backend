@@ -54,6 +54,56 @@ components:
         role:
           type: string
           enum: ['Admin', 'Manager', 'Member']
+    
+    Sprint:
+      type: object
+      properties:
+        name: 
+          type: string
+        startDate: 
+          type: date
+        endDate: 
+          type: date
+        description: 
+          type: string
+        tasks:
+          type: object
+          items:
+            $ref: '#/components/schemas/Tasks'
+        
+    
+
+    Tasks:
+      type: object
+      properties:
+        projectId:
+          $ref: '#/components/schemas/Project'
+        title: 
+          type: string
+        description:
+          type: string
+        assignee:
+          $ref: '#/components/schemas/User'
+        status:
+          type: string
+        sprint: 
+          type: object
+          items:
+            $ref: '#/components/schemas/Sprint'
+
+      
+
+    Workspace:
+      type: object
+      properties:
+        name:
+          type: string
+        description:
+          type: string
+        members:
+          type: array
+          items:
+            $ref: '#/components/schemas/Member'
 
     Token:
       type: object

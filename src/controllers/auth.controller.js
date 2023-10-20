@@ -47,6 +47,46 @@ const verifyEmail = catchAsync(async (req, res) => {
   res.status(httpStatus.NO_CONTENT).send();
 });
 
+const googleLogin = async (profile) => {
+  email = profile.emails[0].value;
+  let user = await authService.SocialLogin(email, 'google', profile.id);
+  if (!user) {
+    userBody = {
+      name: profile.displayName,
+      email,
+      isEmailVerifed: true,
+      google: profile.id,
+    };
+
+    user = await userService.createUser(userBody);
+  }
+
+  const tokens = await tokenService.generateAuthTokens(user);
+  console.log('C_USER: ', user, tokens);
+
+  return { user, tokens };
+};
+
+const githubLogin = async (profile) => {
+  email = profile.emails[0].value;
+  let user = await authService.SocialLogin(email, 'github', profile.id);
+  if (!user) {
+    userBody = {
+      name: profile.displayName,
+      email,
+      isEmailVerifed: true,
+      google: profile.id,
+    };
+
+    user = await userService.createUser(userBody);
+  }
+
+  const tokens = await tokenService.generateAuthTokens(user);
+  console.log('C_USER: ', user, tokens);
+
+  return { user, tokens };
+};
+
 module.exports = {
   register,
   login,
@@ -56,4 +96,6 @@ module.exports = {
   resetPassword,
   sendVerificationEmail,
   verifyEmail,
+  googleLogin,
+  githubLogin,
 };

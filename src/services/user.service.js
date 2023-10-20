@@ -72,13 +72,25 @@ const updateUserById = async (userId, updateBody) => {
  * @returns {Promise<User>}
  */
 
-
 const deleteUserById = async (userId) => {
   const user = await getUserById(userId);
   if (!user) {
     throw new ApiError(httpStatus.NOT_FOUND, 'User not found');
   }
   await user.remove();
+  return user;
+};
+
+const connectSocial = async (user, socialType, profileId) => {
+  if (socialType === 'google') {
+    user.google = profileId;
+  } else if (socialType === 'github') {
+    user.github = profileId;
+  } else {
+    throw new ApiError(httpStatus.BAD_REQUEST, 'Invalid value for socialType');
+  }
+
+  await user.save();
   return user;
 };
 
@@ -89,4 +101,5 @@ module.exports = {
   getUserByEmail,
   updateUserById,
   deleteUserById,
+  connectSocial,
 };
