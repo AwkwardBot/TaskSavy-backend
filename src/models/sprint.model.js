@@ -22,12 +22,12 @@ const sprintSchema = new mongoose.Schema({
   status: {
     type: String,
     emum: ['Pending', 'Started', 'Finished'],
-    default: 'Pending '
+    default: 'Pending ',
   },
   description: String,
   projectId: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: 'Project'
+    ref: 'Project',
   },
   tasks: [
     {

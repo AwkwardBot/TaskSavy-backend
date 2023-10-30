@@ -1,62 +1,68 @@
 const express = require('express');
+const httpStatus = require('http-status');
 const auth = require('../../middlewares/auth');
 const validate = require('../../middlewares/validate');
 const reqLog = require('../../middlewares/reqLogger');
 const { projectController } = require('../../controllers');
 const { projectValidation } = require('../../validations');
-const httpStatus = require('http-status');
+const { projectAccess, checkRole } = require('./../../middlewares/Access')
 
 const router = express.Router();
 
-router
-  .route('/')
-  .post(auth(), validate(projectValidation.createProject), projectController.createProject)
-  .get(auth(), projectController.getProjects);
+const MANAGER = 'Manager'
+const ADMIN = 'Admin'
 
-router.get('/:projectId', auth(), validate(projectValidation.projectId), projectController.getProject);
+router
+	.route('/')
+	.post(auth(), projectAccess, validate(projectValidation.createProject), projectController.createProject)
+	.get(auth(), projectController.getProjects);
+
+router
+	.route('/:projectId')
+	.get(auth(), projectAccess, validate(projectValidation.projectId), projectController.getProject);
 
 // Tags
 
 router
-  .route('/:projectId/tags')
-  .get(auth(), validate(projectValidation.projectId), projectController.getTags)
-  .patch(auth(), validate(projectValidation.createDeleteTag), projectController.addTag)
-  .delete(auth(), validate(projectValidation.createDeleteTag), projectController.deleteTag)
-  .put(auth(), validate(projectValidation.updateTag), projectController.updateTag);
+	.route('/:projectId/tags')
+	.get(auth(), validate(projectValidation.projectId), projectController.getTags)
+	.patch(auth(), validate(projectValidation.createDeleteTag), projectController.addTag)
+	.delete(auth(), validate(projectValidation.createDeleteTag), projectController.deleteTag)
+	.put(auth(), validate(projectValidation.updateTag), projectController.updateTag);
 
 // Active Status
-router.patch(
-  '/:projectId/active-status/update',
-  auth(),
-  validate(projectValidation.changeStatus),
-  projectController.changeActiveStatus
-);
-router.patch('/:projectId/status/update', auth(), validate(projectValidation.changeStatus), projectController.changeStatus);
+router
+	.route('/:projectId/active-status')
+	.patch(auth(), projectAccess, checkRole(MANAGER), validate(projectValidation.changeStatus),projectController.changeActiveStatus);
+
+
+router
+	.route('/:projectId/status')
+	.patch(auth(), projectAccess, checkRole(ADMIN), validate(projectValidation.changeStatus), projectController.changeStatus);
 
 // Boards
 router
-  .route('/:projectId/boards')
-  .get(auth(), validate(projectValidation.projectId), projectController.getBoards)
-  .post(auth(), validate(projectValidation.projectId), projectController.addBoard);
+	.route('/:projectId/boards')
+	.get(auth(), validate(projectValidation.projectId), projectController.getBoards)
+	.post(auth(), validate(projectValidation.projectId), projectController.addBoard);
 
 router
-  .route('/:projectId/boards/:board')
-  .get(auth(), validate(projectValidation.projectId), projectController.getBoard)
-  .delete(auth(), validate(projectValidation.projectId), projectController.removeBoard)
-  .patch(auth(), validate(projectValidation.projectId), projectController.updateBoard);
+	.route('/:projectId/boards/:board')
+	.get(auth(), validate(projectValidation.projectId), projectController.getBoard)
+	.delete(auth(), validate(projectValidation.projectId), projectController.removeBoard)
+	.patch(auth(), validate(projectValidation.projectId), projectController.updateBoard);
 
 // Members
 router
-  .route('/:projectId/members')
-  .get(auth(), validate(projectValidation.projectId), projectController.getMembers)
-  .patch(auth(), validate(projectValidation.projectId), projectController.addMembers);
+	.route('/:projectId/members')
+	.get(auth(), validate(projectValidation.projectId), projectController.getMembers)
+	.patch(auth(), validate(projectValidation.projectId), projectController.addMembers);
 
 router
-  .route('/:projectId/members:memberId')
-  .get(auth(), validate(projectValidation.memberId), projectController.getMemberById)
-  .delete(auth(), validate(projectValidation.memberId), projectController.deleteMember)
-  .patch(auth(), validate(projectValidation.changeMemberRole), projectController.changeMemberRole);
-
+	.route('/:projectId/members:memberId')
+	.get(auth(), validate(projectValidation.memberId), projectController.getMemberById)
+	.delete(auth(), validate(projectValidation.memberId), projectController.deleteMember)
+	.patch(auth(), validate(projectValidation.changeMemberRole), projectController.changeMemberRole);
 
 module.exports = router;
 
@@ -95,7 +101,7 @@ module.exports = router;
  *             properties:
  *               name:
  *                 type: string
- *               description:
+ *               description: 
  *                 type: string
  *               key:
  *                 type: string
@@ -260,7 +266,7 @@ module.exports = router;
 
 /**
  * @swagger
- * /projects/{projectId}/active-status/update:
+ * /projects/{projectId}/active-status:
  *   patch:
  *     summary: Change Project's Active Status
  *     tags: [Projects]
@@ -286,20 +292,14 @@ module.exports = router;
  *                 enum: ['Active', 'Archive', 'Deleted']
  *
  *     responses:
- *       '200':
+ *       '204':
  *         description: OK
- *         content:
- *           application/json:
- *             schema:
- *               $ref: '#/components/schemas/Project'
- *
  *       '401':
  *         $ref: '#/components/responses/Unauthorized'
  *       "403":
  *         $ref: '#/components/responses/Forbidden'
  *       "404":
  *         $ref: '#/components/responses/NotFound'
- *
  */
 
 /**

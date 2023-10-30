@@ -4,7 +4,11 @@ const ApiError = require('../utils/ApiError');
 const catchAsync = require('../utils/catchAsync');
 const { taskService } = require('../services');
 
-const createTask = catchAsync(async (req, res) => {});
+const createTask = catchAsync(async (req, res) => {
+
+    task = taskService.createTask(req.body)
+
+});
 
 const getTasks = catchAsync(async (req, res) => {});
 
