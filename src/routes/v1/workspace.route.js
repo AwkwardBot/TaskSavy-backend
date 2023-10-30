@@ -5,14 +5,13 @@ const reqLog = require('../../middlewares/reqLogger');
 
 const router = express.Router();
 
-/* eslint-enable */
+/* eslint-disable */
 router
     .route('/')
     .get(auth())
     .post(auth());
 
-
-/* eslint-enable */
+/* eslint-disable */
 router
     .route('/:id')
     .put(auth())
@@ -37,11 +36,32 @@ module.exports = router;
  *     tags: [Workspace]
  *     security:
  *       - bearerAuth: []
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required:
+ *               - name:
+ *             properties:
+ *               name:
+ *                 type: string
+ *                  
  *
  *   get:
- *
+ *     summary: Get Workspaces
+ *     description: Fetch all workspaces of the authenticated user
+ *     tags: [Workspace]
+ *     security:
+ *       - bearerAuth: []
+ *     responses:
+ *       '200':
+ *         description: OK
+ *     
+ *     
  */
-
+ 
 /**
  * @swagger
  * /workspaces/{id}:

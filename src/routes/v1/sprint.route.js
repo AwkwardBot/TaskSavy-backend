@@ -4,21 +4,43 @@ const validate = require('../../middlewares/validate');
 const reqLog = require('../../middlewares/reqLogger');
 const { sprintController } = require('../../controllers');
 const { sprintValidation, projectValidation } = require('../../validations');
-const httpStatus = require('http-status');
 
 const router = express.Router({ mergeParams: true });
 
 router
     .route('/')
-    .post(auth(), validate(sprintValidation.createSprint), sprintController.createSprint )
-    .get(auth(), validate(projectValidation.projectId), sprintController.getSprints);
+    .post(
+        auth(),
+        validate(sprintValidation.createSprint),
+        sprintController.createSprint
+    )
+    .get(
+        auth(),
+        validate(projectValidation.projectId),
+        sprintController.getSprints
+    );
 
 router
     .route('/:sprintId')
-    .get(auth(), validate(sprintValidation.sprintId), sprintController.getSprint)
+    .get(
+        auth(),
+        validate(sprintValidation.sprintId),
+        sprintController.getSprint
+    )
     .patch(auth(), validate(sprintValidation.sprintId))
     .put(auth(), validate(sprintValidation.updateSprint))
-    .delete(auth(), validate(sprintValidation.statusValidation))
+    .delete(auth(), validate(sprintValidation.statusValidation));
+
+router
+	.route('/:sprint/tasks')
+	.get(auth())
+	.post(auth());
+
+router
+	.route('/:sprint/tasks/:taskId')
+	.patch(auth())
+	.delete(auth())
+
 
 
 module.exports = router;
@@ -82,7 +104,7 @@ module.exports = router;
  *                   $ref: '#/components/schemas/Sprint'
  *       "400":
  *         description: Bad Request
- * 
+ *
  *
  *   get:
  *     summary: Get all sprints of a project
@@ -105,7 +127,7 @@ module.exports = router;
  *             schema:
  *               $ref: '#/components/schemas/Sprint'
  *       '400':
- *         description: Bad Request  
+ *         description: Bad Request
  *       '401':
  *         $ref: '#/components/responses/Unauthorized'
  *       "404":
