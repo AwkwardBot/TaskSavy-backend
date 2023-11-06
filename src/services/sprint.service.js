@@ -1,7 +1,6 @@
 const httpStatus = require('http-status');
 const { Sprint } = require('../models');
 const ApiError = require('../utils/ApiError');
-const { projectService } = require('.');
 
 /**
  * Create a new Sprint
@@ -11,10 +10,9 @@ const { projectService } = require('.');
  * @returns {Promise<Sprint>}
  */
 
-const createSprint = async (sprintBody, userId, projectId) => {
-  await projectService.getProjectById(projectId, userId);
-  sprintBody.projectId = projectId;
-  return Sprint.create(sprintBody);
+const createSprint = async (sprintBody, projectId) => {
+    sprintBody.projectId = projectId;
+    return Sprint.create(sprintBody);
 };
 
 /**
@@ -25,12 +23,11 @@ const createSprint = async (sprintBody, userId, projectId) => {
  */
 
 const getSprints = async (userId, projectId) => {
-  await projectService.getProjectById(projectId, userId);
-  const sprints = await Sprint.find({
-    projectId,
-  });
+    const sprints = await Sprint.find({
+        projectId
+    });
 
-  return sprints;
+    return sprints;
 };
 
 /**
@@ -42,21 +39,20 @@ const getSprints = async (userId, projectId) => {
  */
 
 const getSprintById = async (sprintId, projectId, userId) => {
-  await projectService.getProjectById(projectId, userId);
 
-  const sprint = Sprint.findOne({
-    _id: sprintId,
-  });
+    const sprint = Sprint.findOne({
+        _id: sprintId
+    });
 
-  if (!sprint) {
-    throw new ApiError(httpStatus.NOT_FOUND, 'Sprint does not exist');
-  }
+    if (!sprint) {
+        throw new ApiError(httpStatus.NOT_FOUND, 'Sprint does not exist');
+    }
 
-  return sprint;
+    return sprint;
 };
 
 module.exports = {
-  createSprint,
-  getSprints,
-  getSprintById,
+    createSprint,
+    getSprints,
+    getSprintById
 };

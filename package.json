@@ -49,6 +49,7 @@
     "prettier"
   ],
   "dependencies": {
+    "axios": "^1.6.0",
     "bcryptjs": "^2.4.3",
     "compression": "^1.7.4",
     "cors": "^2.8.5",
@@ -72,6 +73,7 @@
     "passport-google-oidc": "^0.1.0",
     "passport-jwt": "^4.0.0",
     "pm2": "^5.1.0",
+    "quickblox": "^2.16.1",
     "swagger-jsdoc": "^6.0.8",
     "swagger-ui-express": "^4.1.6",
     "validator": "^13.0.0",

@@ -46,6 +46,11 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/Member'
+        tags:
+          type: array
+          items:
+            $ref: '#/components/schemas/Tag'
+
     Member:
       type: object
       properties:
@@ -55,6 +60,12 @@ components:
           type: string
           enum: ['Admin', 'Manager', 'Member']
     
+    Tag:
+      type: object
+      properties:
+        name:
+          type: string
+
     Sprint:
       type: object
       properties:

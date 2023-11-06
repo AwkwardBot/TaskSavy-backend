@@ -5,64 +5,144 @@ const validate = require('../../middlewares/validate');
 const reqLog = require('../../middlewares/reqLogger');
 const { projectController } = require('../../controllers');
 const { projectValidation } = require('../../validations');
-const { projectAccess, checkRole } = require('./../../middlewares/Access')
+const { projectAccess, checkRole } = require('./../../middlewares/Access');
 
 const router = express.Router();
 
-const MANAGER = 'Manager'
-const ADMIN = 'Admin'
+const MANAGER = 'Manager';
+const ADMIN = 'Admin';
 
 router
-	.route('/')
-	.post(auth(), projectAccess, validate(projectValidation.createProject), projectController.createProject)
-	.get(auth(), projectController.getProjects);
+    .route('/')
+    .post(
+        auth(),
+        projectAccess,
+        validate(projectValidation.createProject),
+        projectController.createProject
+    )
+    .get(auth(),projectAccess, projectController.getProjects);
 
 router
-	.route('/:projectId')
-	.get(auth(), projectAccess, validate(projectValidation.projectId), projectController.getProject);
+    .route('/:projectId')
+    .get(
+        auth(),
+        projectAccess,
+        validate(projectValidation.projectId),
+        projectController.getProject
+    );
 
 // Tags
 
 router
-	.route('/:projectId/tags')
-	.get(auth(), validate(projectValidation.projectId), projectController.getTags)
-	.patch(auth(), validate(projectValidation.createDeleteTag), projectController.addTag)
-	.delete(auth(), validate(projectValidation.createDeleteTag), projectController.deleteTag)
-	.put(auth(), validate(projectValidation.updateTag), projectController.updateTag);
+    .route('/:projectId/tags')
+    .get(
+        auth(),
+        validate(projectValidation.projectId),
+        projectController.getTags
+    )
+    .patch(
+        auth(),
+        validate(projectValidation.createDeleteTag),
+        projectController.addTag
+    )
+    .delete(
+        auth(),
+        validate(projectValidation.createDeleteTag),
+        projectController.deleteTag
+    )
+    .put(
+        auth(),
+        validate(projectValidation.updateTag),
+        projectController.updateTag
+    );
 
 // Active Status
 router
-	.route('/:projectId/active-status')
-	.patch(auth(), projectAccess, checkRole(MANAGER), validate(projectValidation.changeStatus),projectController.changeActiveStatus);
-
+    .route('/:projectId/active-status')
+    .patch(
+        auth(),
+        projectAccess,
+        checkRole(MANAGER),
+        validate(projectValidation.changeStatus),
+        projectController.changeActiveStatus
+    );
 
 router
-	.route('/:projectId/status')
-	.patch(auth(), projectAccess, checkRole(ADMIN), validate(projectValidation.changeStatus), projectController.changeStatus);
+    .route('/:projectId/status')
+    .patch(
+        auth(),
+        projectAccess,
+        checkRole(ADMIN),
+        validate(projectValidation.changeStatus),
+        projectController.changeStatus
+    );
 
 // Boards
 router
-	.route('/:projectId/boards')
-	.get(auth(), validate(projectValidation.projectId), projectController.getBoards)
-	.post(auth(), validate(projectValidation.projectId), projectController.addBoard);
+    .route('/:projectId/boards')
+    .get(
+        auth(),
+        validate(projectValidation.projectId),
+        projectController.getBoards
+    )
+    .post(
+        auth(),
+        validate(projectValidation.projectId),
+        projectController.addBoard
+    );
 
 router
-	.route('/:projectId/boards/:board')
-	.get(auth(), validate(projectValidation.projectId), projectController.getBoard)
-	.delete(auth(), validate(projectValidation.projectId), projectController.removeBoard)
-	.patch(auth(), validate(projectValidation.projectId), projectController.updateBoard);
+    .route('/:projectId/boards/:board')
+    .get(
+        auth(),
+        validate(projectValidation.projectId),
+        projectController.getBoard
+    )
+    .delete(
+        auth(),
+        validate(projectValidation.projectId),
+        projectController.removeBoard
+    )
+    .patch(
+        auth(),
+        validate(projectValidation.projectId),
+        projectController.updateBoard
+    );
 
 // Members
 router
-	.route('/:projectId/members')
-	.get(auth(), validate(projectValidation.projectId), projectController.getMembers)
-	.patch(auth(), validate(projectValidation.projectId), projectController.addMembers);
+    .route('/:projectId/members')
+    .get(
+        auth(),
+		projectAccess,
+        validate(projectValidation.projectId),
+        projectController.getMembers
+    )
+    .patch(
+        auth(),
+		projectAccess,
+		checkRole(MANAGER),
+        validate(projectValidation.projectId),
+        projectController.addMembers
+    );
 
 router
-	.route('/:projectId/members:memberId')
-	.get(auth(), validate(projectValidation.memberId), projectController.getMemberById)
-	.delete(auth(), validate(projectValidation.memberId), projectController.deleteMember)
-	.patch(auth(), validate(projectValidation.changeMemberRole), projectController.changeMemberRole);
+    .route('/:projectId/members/:memberId')
+    .get(
+        auth(),
+        validate(projectValidation.memberId),
+        projectController.getMemberById
+    )
+    .delete(
+        auth(),
+        validate(projectValidation.memberId),
+        projectController.deleteMember
+    )
+    .patch(
+        auth(),
+        validate(projectValidation.changeMemberRole),
+        projectController.changeMemberRole
+    );
 
 module.exports = router;
 
@@ -101,7 +181,7 @@ module.exports = router;
  *             properties:
  *               name:
  *                 type: string
- *               description: 
+ *               description:
  *                 type: string
  *               key:
  *                 type: string
@@ -186,6 +266,35 @@ module.exports = router;
 /**
  * @swagger
  * /projects/{projectId}/tags:
+ *   post:
+ *     summary: Create a new Tag of a project
+ *     tags: [Tags]
+ *     description: Admin and Manager can create a new tag
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - name: projectId
+ *         in: path
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: Project id
+ *
+ *     responses:
+ *       '200':
+ *         description: OK
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/'
+ *
+ *       '401':
+ *         $ref: '#/components/responses/Unauthorized'
+ *       "403":
+ *         $ref: '#/components/responses/Forbidden'
+ *       "404":
+ *         $ref: '#/components/responses/NotFound'
+ *
  *   get:
  *     summary: Get Tags of a project
  *     tags: [Tags]
@@ -344,4 +453,58 @@ module.exports = router;
  *       "404":
  *         $ref: '#/components/responses/NotFound'
  *
+ */
+
+// Project Members
+
+/**
+ * @swagger
+ * /projects/{projectId}/members:
+ *   get:
+ *     summary: Get a projects
+ *     tags: [Project Members]
+ *     descriptions: Only authenticated users can fetch their project
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - name: projectId
+ *         in: path
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: Project id
+ *     responses:
+ *       '200':
+ *         description: OK
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/Members'
+ *       '401':
+ *         $ref: '#/components/responses/Unauthorized'
+ *       "403":
+ *         $ref: '#/components/responses/Forbidden'
+ *       "404":
+ *         $ref: '#/components/responses/NotFound'
+ *   	
+ *   
+ *   patch:
+ *     summary: Add Member
+ *     tags: [Project Members]
+ *     descriptions: Only authenticated users can fetch their project
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - name: projectId
+ *         in: path
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: Project id
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             '$ref': '#/components/schemas/Member'
  */

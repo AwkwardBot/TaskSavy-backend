@@ -9,14 +9,14 @@ const ApiError = require('../utils/ApiError');
  *
  */
 const createProject = async (projectBody, userId) => {
-  projectBody.members = [
-    {
-      userId,
-      role: 'Admin',
-    },
-  ];
+    projectBody.members = [
+        {
+            userId,
+            role: 'Admin'
+        }
+    ];
 
-  return Project.create(projectBody);
+    return Project.create(projectBody);
 };
 
 /**
@@ -26,13 +26,24 @@ const createProject = async (projectBody, userId) => {
  */
 
 const getProjects = async (userId) => {
-  return Project.find({
-    'members.userId': userId,
-  });
+    return Project.find({
+        'members.userId': userId
+    });
 };
 
-
 const updateProjectById = async (id) => {};
+
+const deleteProject = async (projectId) => {
+
+	const project = await Project.findByIdAndDelete(projectId);
+	if (!project) {
+		return false
+	}
+
+	return true
+
+
+};
 
 /**
  * Change the active status of a project.
@@ -44,9 +55,9 @@ const updateProjectById = async (id) => {};
  */
 
 const changeActiveStatus = async (project, status) => {
-  project.activeStatus = status;
-  await project.save();
-  return project;
+    project.activeStatus = status;
+    await project.save();
+    return project;
 };
 
 /**
@@ -59,9 +70,9 @@ const changeActiveStatus = async (project, status) => {
  */
 
 const changeStatus = async (project, status) => {
-  project.status = status;
-  await project.save();
-  return project;
+    project.status = status;
+    await project.save();
+    return project;
 };
 
 /**
@@ -71,7 +82,7 @@ const changeStatus = async (project, status) => {
  */
 
 const getTags = async (project) => {
-  return project.tags;
+    return project.tags;
 };
 
 /**
@@ -82,14 +93,13 @@ const getTags = async (project) => {
  */
 
 const getTag = async (project, tag) => {
+    const tags = project.tags.find((t) => t.name === tag);
 
-  const tags = project.tags.find((t) => t.name === tag);
+    if (!tags == -1) {
+        throw new ApiError(httpStatus.NOT_FOUND, 'Tag does not exist');
+    }
 
-  if (!tags == -1) {
-    throw new ApiError(httpStatus.NOT_FOUND, 'Tag does not exist');
-  }
-
-  return tags;
+    return tags;
 };
 
 /**
@@ -101,9 +111,9 @@ const getTag = async (project, tag) => {
  */
 
 const addTag = async (project, tag) => {
-  project.tags.push(tag);
-  await project.save();
-  return project;
+    project.tags.push(tag);
+    await project.save();
+    return project;
 };
 
 /**
@@ -113,9 +123,9 @@ const addTag = async (project, tag) => {
  */
 
 const deleteTag = async (project, tag) => {
-  project.tags = project.tags.filter((tags) => tags !== tag);
-  await project.save();
-  return project;
+    project.tags = project.tags.filter((tags) => tags !== tag);
+    await project.save();
+    return project;
 };
 
 /**
@@ -127,43 +137,54 @@ const deleteTag = async (project, tag) => {
  */
 
 const updateTag = async (project, tagUpdate) => {
-
-  const tag = await getTag(project, tagUpdate.old);
-  console.log(tag);
-  tag.name = tagUpdate.new;
-  console.log('updated: ', tag);
-  project.save();
-  console.log(project);
-  return tag;
+    const tag = await getTag(project, tagUpdate.old);
+    console.log(tag);
+    tag.name = tagUpdate.new;
+    console.log('updated: ', tag);
+    project.save();
+    console.log(project);
+    return tag;
 };
 
-const getMembers = async (projectId, userId) => {
-  return project.members;
+const getMembers = async (project) => {
+    return project.members;
 };
 
 const getMemberById = async (project, memberId) => {
-  return project.members.find((m) => m.id === memberId);
+    return project.members.find((m) => m.id === memberId);
+};
+
+const addMember = async (project, members) => {
+    for (var member in members) {
+        project.members.push({ userId: member.id, role: member.role });
+    }
+
+    await project.save();
+    return project;
 };
 
 const searchMemberByName = async (project, name) => {
-  return project.members.find((m) => m.name === name);
+    return project.members.find((m) => m.name === name);
 };
 
 const queryProject = async () => {
-  const projects = await Project.paginate(filter, options);
-  return projects;
+    const projects = await Project.paginate(filter, options);
+    return projects;
 };
 
 module.exports = {
-  createProject,
-  getProjects,
-  changeActiveStatus,
-  changeStatus,
-  getTags,
-  addTag,
-  deleteTag,
-  getTag,
-  updateTag,
-  getMembers,
-  updateProjectById
+    createProject,
+    getProjects,
+	deleteProject,
+    changeActiveStatus,
+    changeStatus,
+    getTags,
+    addTag,
+    deleteTag,
+    getTag,
+    updateTag,
+    getMembers,
+    getMemberById,
+    addMember,
+    updateProjectById
 };
