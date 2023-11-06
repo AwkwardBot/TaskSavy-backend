@@ -16,7 +16,6 @@ router
     .route('/')
     .post(
         auth(),
-        projectAccess,
         validate(projectValidation.createProject),
         projectController.createProject
     )
