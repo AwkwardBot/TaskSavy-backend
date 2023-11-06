@@ -19,15 +19,23 @@ router
         validate(projectValidation.createProject),
         projectController.createProject
     )
-    .get(auth(),projectAccess, projectController.getProjects);
+    .get(auth(), projectController.getProjects);
 
 router
     .route('/:projectId')
     .get(
         auth(),
+        projectAccess,
         validate(projectValidation.projectId),
         projectController.getProject
-    );
+    )
+    .delete(
+        auth(),
+        projectAccess,
+        checkRole('Admin'),
+        validate(projectValidation.projectId),
+        projectController.deleteProject
+    )
 
 // Tags
 
@@ -411,7 +419,7 @@ module.exports = router;
 
 /**
  * @swagger
- * /projects/{projectId}/status/update:
+ * /projects/{projectId}/status:
  *   patch:
  *     summary: Change Project's Working Status
  *     tags: [Projects]
