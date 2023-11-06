@@ -25,7 +25,6 @@ router
     .route('/:projectId')
     .get(
         auth(),
-        projectAccess,
         validate(projectValidation.projectId),
         projectController.getProject
     );
