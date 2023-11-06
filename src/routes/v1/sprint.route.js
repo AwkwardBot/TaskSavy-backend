@@ -1,5 +1,6 @@
 const express = require('express');
 const auth = require('../../middlewares/auth');
+const { projectAccess, checkRole } = require('../../middlewares/Access');
 const validate = require('../../middlewares/validate');
 const reqLog = require('../../middlewares/reqLogger');
 const { sprintController } = require('../../controllers');
@@ -7,15 +8,21 @@ const { sprintValidation, projectValidation } = require('../../validations');
 
 const router = express.Router({ mergeParams: true });
 
+const MANAGER = 'Manager';
+const ADMIN = 'Admin';
+
 router
     .route('/')
     .post(
         auth(),
+        projectAccess,
+        checkRole(MANAGER),
         validate(sprintValidation.createSprint),
         sprintController.createSprint
     )
     .get(
         auth(),
+        projectAccess,
         validate(projectValidation.projectId),
         sprintController.getSprints
     );
@@ -24,24 +31,32 @@ router
     .route('/:sprintId')
     .get(
         auth(),
+        projectAccess,
         validate(sprintValidation.sprintId),
         sprintController.getSprint
     )
-    .patch(auth(), validate(sprintValidation.sprintId))
-    .put(auth(), validate(sprintValidation.updateSprint))
-    .delete(auth(), validate(sprintValidation.statusValidation));
+    .patch(
+        auth(),
+        projectAccess,
+        checkRole(MANAGER),
+        validate(sprintValidation.sprintId)
+    )
+    .put(
+        auth(),
+        projectAccess,
+        checkRole(MANAGER),
+        validate(sprintValidation.updateSprint)
+    )
+    .delete(
+        auth(),
+        projectAccess,
+        checkRole(ADMIN),
+        validate(sprintValidation.statusValidation)
+    );
 
-router
-	.route('/:sprint/tasks')
-	.get(auth())
-	.post(auth());
+router.route('/:sprint/tasks').get(auth()).post(auth());
 
-router
-	.route('/:sprint/tasks/:taskId')
-	.patch(auth())
-	.delete(auth())
-
-
+router.route('/:sprint/tasks/:taskId').patch(auth()).delete(auth());
 
 module.exports = router;
 

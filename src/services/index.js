@@ -6,3 +6,4 @@ module.exports.projectService = require('./project.service');
 module.exports.sprintService = require('./sprint.service');
 module.exports.taskService = require('./task.service');
 module.exports.workspaceService = require('./workspace.service');
+module.exports.quickbloxService = require('./quickblox.service');

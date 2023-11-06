@@ -15,7 +15,7 @@ const getProjects = catchAsync(async (req, res) => {
         throw new ApiError(httpStatus.NOT_FOUND, 'No Projects');
     }
 
-    res.send(projects);
+    res.status(httpStatus.OK).send(projects);
 });
 
 const getProject = catchAsync(async (req, res) => {
@@ -34,8 +34,21 @@ const updateProject = catchAsync(async (req, res) => {
         req.params.projectId,
         req.body
     );
-    res.send(project);
+    res.status(httpStatus.OK).send(project);
 });
+
+const deleteProject = catchAsync(async (req, res)=> {
+
+    const status = await projectService.deleteProject(
+        req.params.projectId    
+    )
+
+    if(!status) {
+        throw new ApiError(httpStatus.BAD_REQUEST, "Error while deleting project")
+    }
+    res.send(httpStatus.NO_CONTENT)
+})
+
 
 const changeActiveStatus = catchAsync(async (req, res) => {
     const project = await projectService.changeActiveStatus(
@@ -122,14 +135,15 @@ const removeBoard = catchAsync(async (req, res) => {
 const updateBoard = catchAsync(async (req, res) => {});
 
 const getMembers = catchAsync(async (req, res) => {
-    await projectServices;
+    const members = await projectService.getMembers(req.project)
+    res.status(httpStatus.OK).send(members)
 });
 
 const addMembers = catchAsync(async (req, res) => {
-    for (member in req.body.members) {
-        await projectService.addMember(req.user._id, member);
-    }
+
+    await projectService.addMember(req.project, req.body.members);
     res.status(httpStatus.NO_CONTENT).send();
+
 });
 
 const getMemberById = catchAsync(async (req, res) => {});
@@ -147,6 +161,7 @@ module.exports = {
     getProjects,
     getProject,
     updateProject,
+    deleteProject,
     changeActiveStatus,
     changeStatus,
     getTags,
