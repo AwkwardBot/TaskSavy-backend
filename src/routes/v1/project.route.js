@@ -233,7 +233,26 @@ module.exports = router;
  *         $ref: '#/components/responses/Forbidden'
  *       "404":
  *         $ref: '#/components/responses/NotFound'
- *
+ *  
+ *   delete:
+ *     summary: Delete user's project
+ *     tags: [Project]
+ *     description: Only project's admin can delete the project
+ *     security:
+ *       - bearerAuth: []
+ *     responses:
+ *       '204':
+ *         description: Deleted Success
+ *       '401':
+ *         $ref: '#/components/responses/Unauthorized'
+ *       "403":
+ *         $ref: '#/components/responses/Forbidden'
+ *       "404":
+ *         $ref: '#/components/responses/NotFound'
+ * 
+ *     
+ * 
+ * 
  */
 
 /**
