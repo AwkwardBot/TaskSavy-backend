@@ -1,6 +1,7 @@
 const httpStatus = require('http-status');
 const { Project } = require('../models');
 const ApiError = require('../utils/ApiError');
+const { userService } = require('.');
 
 /**
  * Create a new Project
@@ -150,18 +151,63 @@ const getMembers = async (project) => {
     return project.members;
 };
 
+const getMembersDetail = async (project) => {
+	
+	var memberDetails = []
+
+	for (var member in project.members) {
+		var detailuser = userService.getUserById(member.userId)
+		var user = {
+			email: detailuser.email,
+			name: detailuser.name,
+			role: member.role
+		}
+		memberDetails.append(user)
+	}
+
+	return memberDetails
+
+}
+
+const getMemberDetail = async (project, memberId) => {
+		
+	var userDetail = userService.getUserById(member.userId)
+	if (!userDetail)
+		throw new ApiError(httpStatus.NOT_FOUND, "Member with provide id does not exist")
+	var user = {
+		id: memberId,
+		email: userDetail.email,
+		name: userDetail.name,
+		role: project.members.filter((m)=> m.userId == memberId).role
+	}
+
+	return user
+
+}
+
+
 const getMemberById = async (project, memberId) => {
     return project.members.find((m) => m.id === memberId);
 };
 
 const addMember = async (project, members) => {
     for (var member in members) {
-        project.members.push({ userId: member.id, role: member.role });
+		var user = userService.getUserByEmail(member)
+        project.members.push({ userId: user._id, role: member.role });
     }
 
     await project.save();
     return project;
 };
+
+const deleteMember = async(project, member) => {
+
+	project.members = project.members.filter((m) => m !== member);
+	project.save()
+	return project.members
+
+}
+
 
 const searchMemberByName = async (project, name) => {
     return project.members.find((m) => m.name === name);
@@ -186,5 +232,9 @@ module.exports = {
     getMembers,
     getMemberById,
     addMember,
-    updateProjectById
+    updateProjectById,
+	getMembersDetail,
+	getMemberDetail,
+	deleteMember
+
 };
