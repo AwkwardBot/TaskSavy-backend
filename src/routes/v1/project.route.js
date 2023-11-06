@@ -25,20 +25,19 @@ router
     .route('/:projectId')
     .get(
         auth(),
-        projectAccess,
         validate(projectValidation.projectId),
+        projectAccess,
         projectController.getProject
     )
     .delete(
         auth(),
+        validate(projectValidation.projectId),
         projectAccess,
         checkRole('Admin'),
-        validate(projectValidation.projectId),
         projectController.deleteProject
     )
 
 // Tags
-
 router
     .route('/:projectId/tags')
     .get(
@@ -67,9 +66,9 @@ router
     .route('/:projectId/active-status')
     .patch(
         auth(),
+        validate(projectValidation.changeStatus),
         projectAccess,
         checkRole(MANAGER),
-        validate(projectValidation.changeStatus),
         projectController.changeActiveStatus
     );
 
@@ -77,9 +76,9 @@ router
     .route('/:projectId/status')
     .patch(
         auth(),
+        validate(projectValidation.changeStatus),
         projectAccess,
         checkRole(ADMIN),
-        validate(projectValidation.changeStatus),
         projectController.changeStatus
     );
 
@@ -120,15 +119,15 @@ router
     .route('/:projectId/members')
     .get(
         auth(),
-		projectAccess,
         validate(projectValidation.projectId),
+		projectAccess,
         projectController.getMembers
     )
     .patch(
         auth(),
+        validate(projectValidation.projectId),
 		projectAccess,
 		checkRole(MANAGER),
-        validate(projectValidation.projectId),
         projectController.addMembers
     );
 
@@ -233,13 +232,25 @@ module.exports = router;
  *         $ref: '#/components/responses/Forbidden'
  *       "404":
  *         $ref: '#/components/responses/NotFound'
- *  
- *   delete:
+ *
+ */
+ 
+/**
+ * @swagger
+ * /projects/{projectId}:
+ *   get:
  *     summary: Delete user's project
- *     tags: [Project]
+ *     tags: [Projects]
  *     description: Only project's admin can delete the project
  *     security:
  *       - bearerAuth: []
+ *     parameters:
+ *       - name: projectId
+ *         in: path
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: Project id
  *     responses:
  *       '204':
  *         description: Deleted Success
@@ -250,9 +261,29 @@ module.exports = router;
  *       "404":
  *         $ref: '#/components/responses/NotFound'
  * 
- *     
- * 
- * 
+ *   delete:
+ *     summary: Delete user's project
+ *     tags: [Projects]
+ *     description: Only project's admin can delete the project
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - name: projectId
+ *         in: path
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: Project id
+ *     responses:
+ *       '204':
+ *         description: Deleted Success
+ *       '401':
+ *         $ref: '#/components/responses/Unauthorized'
+ *       "403":
+ *         $ref: '#/components/responses/Forbidden'
+ *       "404":
+ *         $ref: '#/components/responses/NotFound'
+ *      
  */
 
 /**
@@ -291,7 +322,7 @@ module.exports = router;
 /**
  * @swagger
  * /projects/{projectId}/tags:
- *   post:
+ *   patch:
  *     summary: Create a new Tag of a project
  *     tags: [Tags]
  *     description: Admin and Manager can create a new tag
@@ -349,12 +380,7 @@ module.exports = router;
  *       "404":
  *         $ref: '#/components/responses/NotFound'
  *
- */
-
-/**
- * @swagger
- * /projects/{projectId}/tags/update:
- *   patch:
+ *   put:
  *     summary: Update Tag
  *     tags: [Tags]
  *     description: Only project members can fetch the tags
@@ -395,7 +421,14 @@ module.exports = router;
  *         $ref: '#/components/responses/Forbidden'
  *       "404":
  *         $ref: '#/components/responses/NotFound'
- *
+ *   delete:
+ *     summary: Delete Tag
+ *     tags: [Tags]
+ *     description: Manager and Admin can delete the tags
+ *     security:
+ *       - bearerAuth: []
+ *     
+ *     
  */
 
 /**
@@ -481,14 +514,13 @@ module.exports = router;
  */
 
 // Project Members
-
 /**
  * @swagger
  * /projects/{projectId}/members:
  *   get:
- *     summary: Get a projects
+ *     summary: Get project members
  *     tags: [Project Members]
- *     descriptions: Only authenticated users can fetch their project
+ *     descriptions: Only authorized users can fetch the members
  *     security:
  *       - bearerAuth: []
  *     parameters:
@@ -533,3 +565,107 @@ module.exports = router;
  *           schema:
  *             '$ref': '#/components/schemas/Member'
  */
+
+/**
+ * @swagger
+ * /projects/{projectId}/members/{memberId}:
+ *   get:
+ *     summary: Get project members
+ *     tags: [Project Members]
+ *     descriptions: Only authorized users can fetch the members
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - name: projectId
+ *         in: path
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: Project id
+ *       - name: memberId
+ *         in: path
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: Member id   
+ *             
+ *     responses:
+ *       '200':
+ *         description: OK
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/MemberDetail'
+ *       '401':
+ *         $ref: '#/components/responses/Unauthorized'
+ *       "403":
+ *         $ref: '#/components/responses/Forbidden'
+ *       "404":
+ *         $ref: '#/components/responses/NotFound'
+ *   	
+ *   
+ *   delete:
+ *     summary: Get project members
+ *     tags: [Project Members]
+ *     descriptions: Only authorized users can fetch the members
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - name: projectId
+ *         in: path
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: Project id
+ *       - name: memberId
+ *         in: path
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: Member id  
+ *     responses:
+ *       '204':
+ *         description: Deleted Successfully
+ *       '401':
+ *         $ref: '#/components/responses/Unauthorized'
+ *       "403":
+ *         $ref: '#/components/responses/Forbidden'
+ *       "404":
+ *         $ref: '#/components/responses/NotFound'
+ *   patch:
+ *     summary: Get project members
+ *     tags: [Project Members]
+ *     descriptions: Only authorized users can fetch the members
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - name: projectId
+ *         in: path
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: Project id
+ *       - name: memberId
+ *         in: path
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: Member id
+ *     responses:
+ *       '200':
+ *         description: Deleted Successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/MemberDetail'
+ *           
+ *       '401':
+ *         $ref: '#/components/responses/Unauthorized'
+ *       "403":
+ *         $ref: '#/components/responses/Forbidden'
+ *       "404":
+ *         $ref: '#/components/responses/NotFound' 
+ * 
+ * 
+ */
+

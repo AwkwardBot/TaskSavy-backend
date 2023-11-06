@@ -60,6 +60,20 @@ components:
           type: string
           enum: ['Admin', 'Manager', 'Member']
     
+    MemberDetail:
+      type: object
+      properties:
+        id:
+          type: string
+        email:
+          type: string
+          format: email
+        name:
+          type: string
+        role:
+          type: string
+          enum: ['Member', 'Manager', 'Admin']
+
     Tag:
       type: object
       properties:

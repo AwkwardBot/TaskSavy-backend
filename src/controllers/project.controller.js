@@ -146,7 +146,12 @@ const addMembers = catchAsync(async (req, res) => {
 
 });
 
-const getMemberById = catchAsync(async (req, res) => {});
+const getMemberById = catchAsync(async (req, res) => {
+
+    const member = await projectService.getMemberDetail(req.project, req.params.memberId)
+
+    return member
+});
 
 const deleteMember = catchAsync(async (req, res) => {
 
