@@ -14,13 +14,12 @@ const createUser = async (userBody) => {
         throw new ApiError(httpStatus.BAD_REQUEST, 'Email already taken');
     }
 
-    // const qbUser = await quickbloxService.registerUser(userBody);
+    const qbUser = await quickbloxService.registerUser(userBody);
 
-    // if(!qbUser.success)
-    //     console.log('Error storing user to quickblox: ' + qbUser.message);
+    if(!qbUser.success)
+        console.log('Error storing user to quickblox: ' + qbUser.message);
 
-
-    return createUser(userBody);
+    return User.create(userBody);
 };
 
 /**
