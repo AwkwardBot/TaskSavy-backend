@@ -7,17 +7,17 @@ const { sprintService } = require('../services');
 const createSprint = catchAsync(async (req, res) => {
     const sprint = await sprintService.createSprint(
         req.body,
-        req.user._id,
         req.params.projectId
     );
+    
     res.status(httpStatus.CREATED).send(sprint);
 });
 
 const getSprints = catchAsync(async (req, res) => {
     const sprints = await sprintService.getSprints(
-        req.user._id,
         req.params.projectId
     );
+    
 
     if (!sprints) {
         throw new ApiError(httpStatus.NOT_FOUND, 'No Sprints');
