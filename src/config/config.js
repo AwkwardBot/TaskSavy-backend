@@ -77,6 +77,8 @@ module.exports = {
     quickblox_api_key: envVars.QB_API_KEY,
     quickblox_base_url: envVars.QB_BASE_URL,
 
+    sendbird_api_token: envVars.SB_API_TOKEN,
+
     mongoose: {
         url: envVars.MONGODB_URL + (envVars.NODE_ENV === 'test' ? '-test' : ''),
         options: {

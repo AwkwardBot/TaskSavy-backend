@@ -22,10 +22,12 @@ const createSprint = async (sprintBody, projectId) => {
  * @return {Array<Sprint>}
  */
 
-const getSprints = async (userId, projectId) => {
+const getSprints = async (projectId) => {
     const sprints = await Sprint.find({
-        projectId
+        projectId: projectId  
     });
+
+    console.log(sprints)
 
     return sprints;
 };
