@@ -24,9 +24,9 @@ const taskSchema = new mongoose.Schema({
     type: String,
     default: 'Pending',
   },
-  sprint: {
+  story: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: 'Sprint',
+    ref: 'Story',
   },
 });
 

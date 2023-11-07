@@ -4,4 +4,5 @@ module.exports.projectController = require('./project.controller');
 module.exports.sprintController = require('./sprint.controller');
 module.exports.taskController = require('./task.controller');
 module.exports.workspaceController = require('./workspace.controller');
-module.exports.sendbirdController = require('./sendbird.controller')
+module.exports.sendbirdController = require('./sendbird.controller');
+module.exports.storyController = require('./story.controller')
