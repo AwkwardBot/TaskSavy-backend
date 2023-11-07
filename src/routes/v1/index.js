@@ -5,6 +5,7 @@ const docsRoute = require('./docs.route');
 const projectRoute = require('./project.route');
 const sprintRoutes = require('./sprint.route');
 const taskRoutes = require('./task.route');
+const sendbirdRoutes = require('./sendbird.route')
 
 const config = require('../../config/config');
 
@@ -31,6 +32,11 @@ const defaultRoutes = [
     path: '/tasks',
     route: taskRoutes,
   },
+  {
+    path: '/sendbird',
+    route: sendbirdRoutes
+  },
+
 ];
 
 const devRoutes = [
