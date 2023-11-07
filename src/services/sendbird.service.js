@@ -29,7 +29,6 @@ const getAllUsers = async (user) => {
 
 const createUser = async (userBody) => {
     try {
-        console.log(userBody._id)
         const userResponse = await axios.post( `${config.sendbird_base_url}/v3/users`,
         {  
                 user_id: userBody._id,

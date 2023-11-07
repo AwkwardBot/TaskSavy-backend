@@ -14,8 +14,6 @@ const getAllUsers = catchAsync(async (req, res) => {
         throw new ApiError (httpStatus.BAD_REQUEST, allUsers.message )
     }
 
-    console.log(allUsers)
-
     res.status(httpStatus.OK).send(allUsers.data.users)
 });
 

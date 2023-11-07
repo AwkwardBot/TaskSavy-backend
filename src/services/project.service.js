@@ -139,11 +139,8 @@ const deleteTag = async (project, tag) => {
 
 const updateTag = async (project, tagUpdate) => {
     const tag = await getTag(project, tagUpdate.old);
-    console.log(tag);
     tag.name = tagUpdate.new;
-    console.log('updated: ', tag);
     project.save();
-    console.log(project);
     return tag;
 };
 
