@@ -15,15 +15,15 @@ router
     .route('/')
     .post(
         auth(),
+        validate(sprintValidation.createSprint),
         projectAccess,
         checkRole(MANAGER),
-        validate(sprintValidation.createSprint),
         sprintController.createSprint
     )
     .get(
         auth(),
-        projectAccess,
         validate(projectValidation.projectId),
+        projectAccess,
         sprintController.getSprints
     );
 
@@ -31,27 +31,29 @@ router
     .route('/:sprintId')
     .get(
         auth(),
-        projectAccess,
         validate(sprintValidation.sprintId),
+        projectAccess,
         sprintController.getSprint
     )
     .patch(
         auth(),
+        validate(sprintValidation.sprintId),
         projectAccess,
         checkRole(MANAGER),
-        validate(sprintValidation.sprintId)
     )
     .put(
         auth(),
+        validate(sprintValidation.updateSprint),
         projectAccess,
         checkRole(MANAGER),
-        validate(sprintValidation.updateSprint)
+        
     )
     .delete(
         auth(),
+        validate(sprintValidation.statusValidation),
         projectAccess,
         checkRole(ADMIN),
-        validate(sprintValidation.statusValidation)
+        
     );
 
 router.route('/:sprint/tasks').get(auth()).post(auth());
