@@ -52,6 +52,9 @@ const envVarsSchema = Joi.object()
         QB_BASE_URL: Joi.string().description('QuickBlox Base Url').required(),
         QB_API_KEY: Joi.string().description('QuickBlox Api key').required(),
 
+        SB_API_TOKEN: Joi.string().description('SendBird Api key').required(),
+        SB_BASE_URL: Joi.string().description('SendBird Base Url').required(),
+
     })
     .unknown(true);
 
@@ -78,6 +81,7 @@ module.exports = {
     quickblox_base_url: envVars.QB_BASE_URL,
 
     sendbird_api_token: envVars.SB_API_TOKEN,
+    sendbird_base_url: envVars.SB_BASE_URL,
 
     mongoose: {
         url: envVars.MONGODB_URL + (envVars.NODE_ENV === 'test' ? '-test' : ''),

@@ -1,7 +1,7 @@
 const httpStatus = require('http-status');
 const { User } = require('../models');
 const ApiError = require('../utils/ApiError');
-const quickbloxService = require('./quickblox.service');
+const sendbirdService = require('./sendbird.service');
 
 
 /**
@@ -14,12 +14,19 @@ const createUser = async (userBody) => {
         throw new ApiError(httpStatus.BAD_REQUEST, 'Email already taken');
     }
 
-    const qbUser = await quickbloxService.registerUser(userBody);
+    const user = await User.create(userBody)
+    const sbResponse = await sendbirdService.createUser(user)
 
-    if(!qbUser.success)
-        console.log('Error storing user to quickblox: ' + qbUser.message);
+    if (sbResponse.error) {
 
-    return User.create(userBody);
+        deleteUserById(user._id)
+        throw new ApiError(httpStatus.BAD_REQUEST, sbResponse.message)
+
+    }
+
+
+
+    return user;
 };
 
 /**
