@@ -26,9 +26,6 @@ const getSprints = async (projectId) => {
     const sprints = await Sprint.find({
         projectId: projectId  
     });
-
-    console.log(sprints)
-
     return sprints;
 };
 

@@ -35,7 +35,6 @@ const getSprint = catchAsync(async (req, res) => {
     if (!sprint) {
         throw new ApiError(httpStatus.NOT_FOUND, 'Project not found');
     }
-    console.log(sprint);
     res.status(httpStatus.OK).send(sprint);
 });
 

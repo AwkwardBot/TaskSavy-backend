@@ -103,9 +103,7 @@ passport.use(
       callbackURL: 'http://localhost:3000/auth/github/callback',
     },
     async function (refreshToken, accessToken, profile, done) {
-      console.log('P: ', profile);
-      console.log('AT: ', accessToken);
-      console.log('RT: ', refreshToken);
+
       const data = await authController.githubLogin(profile);
 
       const { user } = data;

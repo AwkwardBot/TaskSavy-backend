@@ -64,7 +64,6 @@ const googleLogin = async (profile) => {
   }
 
   const tokens = await tokenService.generateAuthTokens(user);
-  console.log('C_USER: ', user, tokens);
 
   return { user, tokens };
 };
@@ -84,8 +83,6 @@ const githubLogin = async (profile) => {
   }
 
   const tokens = await tokenService.generateAuthTokens(user);
-  console.log('C_USER: ', user, tokens);
-
   return { user, tokens };
 };
 
