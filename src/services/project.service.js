@@ -1,7 +1,9 @@
 const httpStatus = require('http-status');
 const { Project } = require('../models');
 const ApiError = require('../utils/ApiError');
-const { userService } = require('.');
+const userService = require('./user.service');
+const ticketTypeService = require('./ticketType.service');
+
 
 /**
  * Create a new Project
@@ -17,7 +19,12 @@ const createProject = async (projectBody, userId) => {
         }
     ];
 
-    return Project.create(projectBody);
+    const project = await Project.create(projectBody);
+    console.log(ticketTypeService)
+    
+    await ticketTypeService.createTicketType(project.id)
+
+    return project
 };
 
 /**

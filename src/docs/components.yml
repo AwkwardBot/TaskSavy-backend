@@ -96,27 +96,49 @@ components:
           items:
             $ref: '#/components/schemas/Tasks'
         
-    
-
-    Tasks:
+    Ticket:
       type: object
       properties:
+        ticket_type_id:
+          type: string
         projectId:
-          $ref: '#/components/schemas/Project'
-        title: 
+          type: string
+        title:
           type: string
         description:
           type: string
-        assignee:
-          $ref: '#/components/schemas/User'
         status:
           type: string
-        sprint: 
-          type: object
-          items:
-            $ref: '#/components/schemas/Sprint'
-
       
+      TicketsArray:
+        type: array
+        items:
+          $ref: '#/components/schemas/Tickets'
+          
+
+    TicketType:
+      type: object
+      properties:
+        ticket_type:
+          type: object
+          properties:
+            name:
+              type: string
+            theme:
+              type: object
+              properties:
+                bg:
+                  type: string
+                text:
+                  type: string
+
+      TicketTypeArray:
+        type: array
+        items:
+          $ref: '#/components/schemas/TicketType'
+
+
+        
 
     Workspace:
       type: object
@@ -157,6 +179,9 @@ components:
           type: number
         message:
           type: string
+    
+    
+      
     
   responses:
     DuplicateEmail:
