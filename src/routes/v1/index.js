@@ -4,8 +4,10 @@ const userRoute = require('./user.route');
 const docsRoute = require('./docs.route');
 const projectRoute = require('./project.route');
 const sprintRoutes = require('./sprint.route');
-const taskRoutes = require('./task.route');
 const sendbirdRoutes = require('./sendbird.route')
+const ticketRoutes = require('./ticket.route')
+const ticketTypeRoutes = require('./ticketType.route')
+
 
 const config = require('../../config/config');
 
@@ -29,13 +31,18 @@ const defaultRoutes = [
     route: sprintRoutes,
   },
   {
-    path: '/tasks',
-    route: taskRoutes,
+    path: '/projects/:projectId/ticket-types',
+    route: ticketTypeRoutes
+  },
+  {
+    path: '/projects/:projectId/ticket',
+    route: ticketRoutes,
   },
   {
     path: '/sendbird',
     route: sendbirdRoutes
   },
+  
 
 ];
 
