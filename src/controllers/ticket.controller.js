@@ -19,13 +19,28 @@ const getTickets = catchAsync(async (req, res) => {
     res.status(httpStatus.OK).send(tickets)
 });
 
-const getTicketsBySprint = catchAsync(async (req, res) => {});
+const getTicketsBySprint = catchAsync(async (req, res) => {
+    const tickets = await ticketService.getTicketsBySprint(req.params.projectId, req.params.sprintId)
+    res.status(httpStatus.OK).send(tickets)
+
+
+});
 
 const getTicketById = catchAsync(async (req, res) => {});
 
-const updateTicket = catchAsync(async (req, res) => {});
+const updateTicket = catchAsync(async (req, res) => {
+    
+    const ticket = await ticketService.updateTicket(req.params.ticketId, req.body)
 
-const changeTicketStatus = catchAsync(async (req, res) => {});
+    res.status(httpStatus.OK).send(ticket)
+    
+
+
+});
+
+const changeTicketStatus = catchAsync(async (req, res) => {
+    
+});
 
 const getTicketAssignees = catchAsync(async (req, res) => {});
 

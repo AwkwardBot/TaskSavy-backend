@@ -11,7 +11,6 @@ const ticketSchema = new mongoose.Schema({
     },
     url: {
         type: String,
-        required: true
     },
     title: {
         type: String,
@@ -29,6 +28,10 @@ const ticketSchema = new mongoose.Schema({
         required: true,
         default: "Pending"
     },
+    due_date: {
+        type: Date,
+        required: true
+    },
     created_at: {
         type: Date,
         default: Date.now
@@ -36,6 +39,11 @@ const ticketSchema = new mongoose.Schema({
     sprint: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Sprint',
+    },
+    priority: {
+        type: String,
+        enum: ['Low', 'Normal', 'High'],
+        default: 'Normal'
     }
 });
 

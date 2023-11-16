@@ -1,7 +1,7 @@
 const httpStatus = require('http-status');
 const { Ticket } = require('../models');
 const ApiError = require('../utils/ApiError');
-const { ticketTypeService } = require('.');
+const ticketTypeService = require('./ticketType.service')
 
 const createTicket = async (projectId, ticketBody) => {
     ticketBody.projectId = projectId;
@@ -46,10 +46,31 @@ const deleteTicketbyId = async (projectId, ticketId) => {
             message: e.message
         }
     }
-}  
+}
+
+const updateTicket = async (ticketId, ticketBody) => {
+    
+    try {
+        await Ticket.findByIdAndUpdate(ticketId, ticketBody)
+        return {
+            success: true
+        }
+    }
+    catch(e) {
+        consle.log(e)
+        return {
+            success: false,
+            message: e.message
+        }
+    }
+    
+
+
+}
 
 module.exports = {
     createTicket,
     getTickets,
-    deleteTicketbyId
+    deleteTicketbyId,
+    updateTicket
 };

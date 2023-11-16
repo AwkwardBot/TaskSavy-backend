@@ -1,5 +1,5 @@
 const reqLog = (req, res, next) => {
-  console.log(req);
+  console.log(req.body);
   next();
 };
 

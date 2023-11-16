@@ -56,9 +56,6 @@ router
         
     );
 
-router.route('/:sprint/tasks').get(auth()).post(auth());
-
-router.route('/:sprint/tasks/:taskId').patch(auth()).delete(auth());
 
 module.exports = router;
 
