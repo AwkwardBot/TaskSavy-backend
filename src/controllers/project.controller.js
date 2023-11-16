@@ -15,6 +15,11 @@ const getProjects = catchAsync(async (req, res) => {
         throw new ApiError(httpStatus.NOT_FOUND, 'No Projects');
     }
 
+    // var ids = [];
+    // for(var project in projects){
+    //     ids.push(projects[project]._id)
+    // }
+
     res.status(httpStatus.OK).send(projects);
 });
 
@@ -150,7 +155,7 @@ const getMemberById = catchAsync(async (req, res) => {
 
     const member = await projectService.getMemberDetail(req.project, req.params.memberId)
 
-    return member
+    res.status(httpStatus.OK).send(member)
 });
 
 const deleteMember = catchAsync(async (req, res) => {
@@ -160,6 +165,15 @@ const deleteMember = catchAsync(async (req, res) => {
 });
 
 const changeMemberRole = catchAsync(async (req, res) => {});
+
+
+const getMembersDetail = catchAsync(async (req, res) => {
+
+    const memberDetails = await projectService.getMembersDetail(req.project);
+    res.status(httpStatus.OK).send(memberDetails)
+
+})
+
 
 module.exports = {
     createProject,
@@ -184,5 +198,6 @@ module.exports = {
     addMembers,
     getMemberById,
     deleteMember,
-    changeMemberRole
+    changeMemberRole,
+    getMembersDetail
 };

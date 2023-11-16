@@ -16,7 +16,14 @@ const createCustomTicket = {
     })
 };
 
+const ticketTypeId = {
+    params: Joi.object().keys({
+        projectId: Joi.required().custom(objectId),
+        ticketTypeId: Joi.required().custom(objectId),
+    })
+}
+
 module.exports = {
     createCustomTicket,
-
+    ticketTypeId
 }

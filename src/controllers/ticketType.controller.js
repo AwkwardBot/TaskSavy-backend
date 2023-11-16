@@ -6,8 +6,7 @@ const { ticketTypeService } = require('../services');
 
 const addCustomTicketType = catchAsync(async (req, res) => {
 
-    console.log(req.body)
-    console.log(req.body.ticket_type.theme.bg)
+
 
     await ticketTypeService.addCustomTicketType(req.params.projectId, req.body.ticket_type)
     getAllTicketTypes(req, res)
@@ -23,15 +22,26 @@ const getAllTicketTypes = catchAsync(async (req, res) => {
 
 const deleteTicketType = catchAsync(async (req, res) => {
 
-    await ticketTypeService.deleteTicketType(req.params.projectId, req.params.ticketId)
+    await ticketTypeService.deleteTicketType(req.params.projectId, req.params.ticketTypeId)
 
     return getAllTicketTypes(req, res)
 });
+
+const getTicketTypeById = catchAsync(async(req, res) => {
+    const projectId = req.params.projectId;
+    const ticketTypeId = req.params.ticketTypeId
+    const ticketType = await ticketTypeService.getTicketTypeById(projectId, ticketTypeId)
+
+    res.status(httpStatus.OK).send(ticketType)
+
+})
+
 
 
 module.exports = {
     addCustomTicketType,
     getAllTicketTypes,
     deleteTicketType,
+    getTicketTypeById
 
 };

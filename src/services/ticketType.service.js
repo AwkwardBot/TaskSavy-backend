@@ -36,7 +36,6 @@ const deleteTicketType = async (projectId, ticketTypeId) => {
       },
       {new: true})
     // tickets.ticket_type = tickets.ticket_type.filter((t) => { t._id == ticketId});
-    console.log("TKT DELETE: ", tickets)
     return tickets.ticket_type
 
 };
@@ -44,18 +43,30 @@ const deleteTicketType = async (projectId, ticketTypeId) => {
 const getTickets = async (projectId) => {
 
     const tickets = await TicketType.find({projectId: projectId})
-    console.log("Tickets: ", tickets)
     return tickets
 };
 
 const findTicketTypeExistById = async (projectId, ticketId) => {
 
     const tickets = await TicketType.findOne({projectId: projectId})
-    for(var ticketType in tickets.ticket_type){
-        if (ticketType._id == ticketId)
-        return true
+    const { ticket_type } = tickets
+    for(var i in ticket_type){
+        
+        if (ticket_type[i]._id == ticketId)
+        return ticket_type[i]
     }
-    return false
+    throw new ApiError(httpStatus.BAD_REQUEST, "Invalid Ticket Type Id")
+};
+
+const getTicketTypeById = async (projectId, ticketId) => {
+
+    const tickets = await TicketType.findOne({projectId: projectId})
+    const { ticket_type } = tickets
+    for(var i in ticket_type){
+        if (ticket_type[i]._id == ticketId)
+        return ticket_type[i]
+    }
+    throw new ApiError(httpStatus.BAD_REQUEST, "Invalid Ticket Type Id")
 };
 
 
@@ -64,5 +75,6 @@ module.exports = {
     addCustomTicketType,
     deleteTicketType,
     getTickets,
-    findTicketTypeExistById
+    findTicketTypeExistById,
+    getTicketTypeById
 };

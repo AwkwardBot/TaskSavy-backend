@@ -20,7 +20,6 @@ const createProject = async (projectBody, userId) => {
     ];
 
     const project = await Project.create(projectBody);
-    console.log(ticketTypeService)
     
     await ticketTypeService.createTicketType(project.id)
 
@@ -159,15 +158,20 @@ const getMembersDetail = async (project) => {
 	
 	var memberDetails = []
 
-	for (var member in project.members) {
-		var detailuser = userService.getUserById(member.userId)
+
+	for (var member of project.members) {
+
+		var detailuser = await userService.getUserById(member.userId)
+        
 		var user = {
+            _id: detailuser._id,
 			email: detailuser.email,
 			name: detailuser.name,
 			role: member.role
 		}
-		memberDetails.append(user)
+		memberDetails.push(user)
 	}
+
 
 	return memberDetails
 

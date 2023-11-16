@@ -17,8 +17,9 @@ router
     .get(auth(), validate(projectValidation.projectId), projectAccess, reqLog, ticketTypeController.getAllTicketTypes);
 
 router
-    .route('/:ticketId')
-    .delete(auth(), validate(), projectAccess, checkRole(MANAGER), ticketTypeController.deleteTicketType)
+    .route('/:ticketTypeId')
+    .delete(auth(), validate(ticketTypeValidation.ticketTypeId), projectAccess, checkRole(MANAGER), ticketTypeController.deleteTicketType)
+    .get(auth(), validate(ticketTypeValidation.ticketTypeId), projectAccess, ticketTypeController.getTicketTypeById)
 
 
 module.exports = router
@@ -34,8 +35,8 @@ module.exports = router
  * @swagger
  * /projects/{projectId}/ticket-types:
  *   post:
- *     summary: Get all ticket types of a project
- *     description: Enter project Id to fetch the tickets of a project
+ *     summary: Create a new custom TicketType
+ *     description: Requires Manager or Admin access
  *     tags: [TicketType]
  *     security:
  *       - bearerAuth: []
@@ -97,7 +98,7 @@ module.exports = router
 
 /**
  * @swagger
- * /projects/{projectId}/ticket-types/{ticketId}:
+ * /projects/{projectId}/ticket-types/{ticketTypeId}:
  *   delete:
  *     summary: Get all ticket types of a project
  *     description: Enter project Id to fetch the tickets of a project
@@ -111,7 +112,7 @@ module.exports = router
  *         schema:
  *           type: string
  *         description: Project id
- *       - name: ticketId
+ *       - name: ticketTypeId
  *         in: path
  *         required: true
  *         schema:
@@ -130,4 +131,37 @@ module.exports = router
  *         $ref: '#/components/responses/Unauthorized'
  *       "404":
  *         $ref: '#/components/responses/NotFound'
+ *   get:
+ *     summary: Get ticket type details
+ *     description: Enter project Id and ticket type Id to fetch the tickets type
+ *     tags: [TicketType]
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - name: projectId
+ *         in: path
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: Project id
+ *       - name: ticketTypeId
+ *         in: path
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: TicketType id
+ *     responses:
+ *       '200':
+ *         description: OK
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/TicketType'
+ *       '400':
+ *         description: Bad Request
+ *       '401':
+ *         $ref: '#/components/responses/Unauthorized'
+ *       "404":
+ *         $ref: '#/components/responses/NotFound'
+ * 
  */

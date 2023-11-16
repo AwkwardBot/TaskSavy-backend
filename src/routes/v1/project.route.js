@@ -131,6 +131,11 @@ router
         projectController.addMembers
     );
 
+router 
+    .route('/:projectId/members/details')
+    .get(auth(), validate(projectValidation.projectId), projectAccess, projectController.getMembersDetail)
+
+
 router
     .route('/:projectId/members/:memberId')
     .get(
@@ -565,6 +570,41 @@ module.exports = router;
  *           schema:
  *             '$ref': '#/components/schemas/Member'
  */
+
+/**
+ * @swagger
+ * /projects/{projectId}/members/details:
+ *   get:
+ *     summary: Get detail project members
+ *     tags: [Project Members]
+ *     descriptions: Only authorized users can fetch the members
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - name: projectId
+ *         in: path
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: Project id
+ *     responses:
+ *       '200':
+ *         description: OK
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/MemberDetail'
+ *       '401':
+ *         $ref: '#/components/responses/Unauthorized'
+ *       "403":
+ *         $ref: '#/components/responses/Forbidden'
+ *       "404":
+ *         $ref: '#/components/responses/NotFound'
+ * 
+ */
+
+
+
 
 /**
  * @swagger
