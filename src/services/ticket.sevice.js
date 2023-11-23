@@ -49,28 +49,48 @@ const deleteTicketbyId = async (projectId, ticketId) => {
 }
 
 const updateTicket = async (ticketId, ticketBody) => {
-    
+    console.log("Body: ", ticketBody);
     try {
-        await Ticket.findByIdAndUpdate(ticketId, ticketBody)
-        return {
-            success: true
+        const ticket = await Ticket.findById(ticketId);
+
+        if (!ticket) {
+            return {
+                success: false,
+                message: 'Ticket not found',
+            };
         }
-    }
-    catch(e) {
-        consle.log(e)
+
+        // Update fields of the ticket using ticketBody
+        Object.assign(ticket, ticketBody);
+
+        // Save the updated ticket
+        const updatedTicket = await ticket.save();
+
+        console.log("Updated", updatedTicket);
+        return updatedTicket;
+    } catch (e) {
+        console.error(e); // Corrected 'consle' to 'console'
         return {
             success: false,
-            message: e.message
-        }
+            message: e.message,
+        };
     }
-    
+};
 
-
+const getTicketById = async (ticketId) => {
+    const ticket = await Ticket.findById(ticketId)
+    console.log("TKT-->", ticket)
+    if (!ticket)
+        throw new ApiError (httpStatus.NOT_FOUND, "Ticket not found")
+    return ticket
 }
+
+
 
 module.exports = {
     createTicket,
     getTickets,
     deleteTicketbyId,
-    updateTicket
+    updateTicket,
+    getTicketById
 };
