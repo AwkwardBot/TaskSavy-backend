@@ -21,6 +21,6 @@ jobs:
           key: ${{ secrets.AWS_PRIVATE_KEY }}
           args: "-o StrictHostKeyChecking=no" 
           script: |
-            cd /path/to/your/app 
+            cd /TaskSavy-backend
             git checkout master 
             git pull origin test 
