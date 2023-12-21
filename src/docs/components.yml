@@ -138,7 +138,30 @@ components:
           $ref: '#/components/schemas/TicketType'
 
 
-        
+    Requirement:
+      type: object
+      properties:
+        projectId:
+          type: string
+          description: The ID of the project associated with the requirement
+        module_name:
+          type: string
+          description: The name of the module
+        requirements:
+          type: array
+          items:
+            type: object
+            properties:
+              requirement:
+                type: string
+                description: The description of the requirement
+              class:
+                type: string
+                description: The class/category of the requirement
+              type:
+                type: string
+                enum: [functional, non-functional]
+                description: The type of requirement (functional or non-functional)
 
     Workspace:
       type: object

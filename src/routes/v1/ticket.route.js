@@ -16,7 +16,7 @@ router
     
 router
     .route('/:ticketId')
-    .get()
+    .get(auth(), projectAccess, ticketController.getTicketById)
     .delete()
     .patch(auth(), validate(), projectAccess, ticketController.updateTicket)
 
@@ -97,6 +97,83 @@ module.exports = router
  *       "404":
  *         $ref: '#/components/responses/NotFound'
  */
+
+/**
+ * @swagger
+ * /projects/{projectId}/ticket/{ticketId}:
+ *   patch:
+ *     summary: Create a new Ticket
+ *     description: Open a new ticket
+ *     tags: [Ticket]
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - name: projectId
+ *         in: path
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: Project id
+ *       - name: ticketId
+ *         in: path
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: Ticket id
+ * 
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             $ref: '#/components/schemas/Ticket'
+ *     responses:
+ *       '200':
+ *         description: OK
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/TicketsArray'
+ *       '400':
+ *         description: Bad Request
+ *       '401':
+ *         $ref: '#/components/responses/Unauthorized'
+ *       "404":
+ *         $ref: '#/components/responses/NotFound'
+ *   get:
+ *     summary: Get all tickets of a project
+ *     description: Enter project Id to fetch its tickets
+ *     tags: [Ticket]
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - name: projectId
+ *         in: path
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: Project id
+ *       - name: ticketId
+ *         in: path
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: Ticket id
+ *     responses:
+ *       '200':
+ *         description: OK
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/TicketsArray'
+ *       '400':
+ *         description: Bad Request
+ *       '401':
+ *         $ref: '#/components/responses/Unauthorized'
+ *       "404":
+ *         $ref: '#/components/responses/NotFound'
+ */
+
 
 /**
  * @swagger

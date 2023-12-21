@@ -1,11 +1,11 @@
 {
-  "name": "create-nodejs-express-app",
+  "name": "tasksavy",
   "version": "1.7.0",
-  "description": "Create a Node.js app for building production-ready RESTful APIs using Express, by running one command",
+  "description": "TaskSavy",
   "bin": "bin/createNodejsApp.js",
   "main": "src/index.js",
   "repository": "https://github.com/hagopj13/node-express-boilerplate.git",
-  "author": "Hagop Jamkojian <hagopj13@gmail.com>",
+  "author": "Team TaskSavy",
   "license": "MIT",
   "engines": {
     "node": ">=12.0.0"
@@ -16,7 +16,7 @@
     "test": "jest -i --colors --verbose --detectOpenHandles",
     "test:watch": "jest -i --watchAll",
     "coverage": "jest -i --coverage",
-    "coverage:coveralls": "jest -i --coverage --coverageReporters=text-lcov | coveralls",
+    "coverage:coveralls": "jest -i --coverage --colors --verbose --coverageReporters=text-lcov | coveralls",
     "lint": "eslint .",
     "lint:fix": "eslint . --fix",
     "prettier": "prettier --check **/*.js",
@@ -51,6 +51,7 @@
   "dependencies": {
     "axios": "^1.6.0",
     "bcryptjs": "^2.4.3",
+    "chai": "^4.3.10",
     "compression": "^1.7.4",
     "cors": "^2.8.5",
     "cross-env": "^7.0.0",
@@ -90,7 +91,7 @@
     "eslint-plugin-jest": "^24.0.1",
     "eslint-plugin-prettier": "^3.1.1",
     "eslint-plugin-security": "^1.4.0",
-    "faker": "^5.1.0",
+    "faker": "5.5.3",
     "husky": "^7.0.0",
     "jest": "^26.0.1",
     "lint-staged": "^11.0.0",

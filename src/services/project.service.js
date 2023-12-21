@@ -20,9 +20,7 @@ const createProject = async (projectBody, userId) => {
     ];
 
     const project = await Project.create(projectBody);
-    
     await ticketTypeService.createTicketType(project.id)
-
     return project
 };
 
@@ -140,7 +138,7 @@ const deleteTag = async (project, tag) => {
  * @param {*} projectId
  * @param {*} userId
  * @param {*} tagUpdate
- * @returns {Promise<Tag>}
+ * @returns {Promise<tag>}
  */
 
 const updateTag = async (project, tagUpdate) => {
@@ -149,6 +147,46 @@ const updateTag = async (project, tagUpdate) => {
     project.save();
     return tag;
 };
+
+
+// Boards
+
+/**
+ * 
+ * @param {project} project 
+ * @returns {Promise<boards>}
+ */
+
+const getBoards = async (project) => {
+    return project.boards
+}
+
+const getBoard = async (project, boardId) => {
+
+    const board = project.boards.find((b) => b.id === boardId);
+    return board
+
+}
+
+const addBoard = async (project, boardBody) => {
+    project.boards.push(boardBody);
+    await project.save();
+    return project;
+}
+ 
+const updateBoards = async (project, updateBody) => {
+    const board = await getBoard(project, updateBody._id)
+    board = updateBody
+    project.save()
+    return project.boards
+} 
+
+const deleteBoard = async (project, boardId) => {
+    project.boards = project.boards.filter((b) => b._id !== boardId);
+    await project.save();
+    return project.boards;
+}
+
 
 const getMembers = async (project) => {
     return project.members;
@@ -226,6 +264,9 @@ const queryProject = async () => {
     return projects;
 };
 
+
+
+
 module.exports = {
     createProject,
     getProjects,
@@ -243,6 +284,13 @@ module.exports = {
     updateProjectById,
 	getMembersDetail,
 	getMemberDetail,
-	deleteMember
+	deleteMember,
+
+    getBoards,
+    getBoard,
+    addBoard,
+    updateBoards,
+    deleteBoard
+
 
 };

@@ -55,3 +55,80 @@ describe('User model', () => {
     });
   });
 });
+
+
+
+// const mongoose = require('mongoose');
+
+// // Your Mongoose schema definition
+// const userSchema = new mongoose.Schema({
+//   name: {
+//     type: String,
+//     required: true,
+//     trim: true,
+//   },
+//   email: {
+//     type: String,
+//     required: true,
+//     unique: true,
+//     trim: true,
+//     lowercase: true,
+//     validate: {
+//       validator: (value) => {
+//         return /\S+@\S+\.\S+/.test(value); // Simple email format validation
+//       },
+//       message: 'Invalid email',
+//     },
+//   },
+//   password: {
+//     type: String,
+//     required: true,
+//     minlength: 8,
+//     validate: {
+//       validator: (value) => {
+//         return /\d/.test(value) && /[a-zA-Z]/.test(value); // Password containing at least one letter and one number
+//       },
+//       message: 'Password must contain at least one letter and one number',
+//     },
+//   },
+//   role: {
+//     type: String,
+//     enum: ['user', 'admin'], // Define valid roles
+//     default: 'user',
+//   },
+// });
+
+// const User = mongoose.model('User', userSchema);
+
+// describe('User model', () => {
+//   describe('User validation', () => {
+//     test('should correctly validate a valid user', async () => {
+//       const validUserData = {
+//         name: faker.name.findName(),
+//         email: faker.internet.email().toLowerCase(),
+//         password: faker.internet.password(8), 
+//         role: 'user',
+//       };
+
+//       await expect(new User(validUserData).validate()).resolves.toBeUndefined();
+//     });
+
+    
+//   });
+
+//   describe('User toJSON()', () => {
+//     test('should not return user password when toJSON is called', () => {
+//       const userData = {
+//         name: faker.name.findName(),
+//         email: faker.internet.email().toLowerCase(),
+//         password: faker.internet.password(8), 
+//         role: 'user',
+//       };
+
+//       const user = new User(userData);
+//       const userJSON = user.toJSON();
+//       expect(userJSON).not.toHaveProperty('password');
+//     });
+//   });
+// });
+

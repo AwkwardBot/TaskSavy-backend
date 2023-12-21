@@ -1,0 +1,25 @@
+name: Deploy to Master on AWS Server
+
+on:
+  push:
+    branches:
+      - test 
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v2
+
+      - name: SSH to AWS Server and Pull Code to Master
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.AWS_SERVER_HOST }}
+          username: "ec2-user" 
+          key: ${{ secrets.AWS_SSH_KEY }}
+          script: |
+            cd /TaskSavy-backend
+            git checkout master 
+            git pull origin test 

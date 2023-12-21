@@ -88,6 +88,8 @@ userSchema.statics.isEmailTaken = async function (email, excludeUserId) {
     return !!user;
 };
 
+
+
 /**
  * Check if password matches the user's password
  * @param {string} password
@@ -120,6 +122,8 @@ userSchema.pre('save', async function (next) {
     next();
 });
 
+
+// QuickBlox
 // userSchema.pre('save', async function (next) {
 // 	const user = this;
 
