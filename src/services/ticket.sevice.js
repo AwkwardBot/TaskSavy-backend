@@ -79,7 +79,6 @@ const updateTicket = async (ticketId, ticketBody) => {
 
 const getTicketById = async (ticketId) => {
     const ticket = await Ticket.findById(ticketId)
-    console.log("TKT-->", ticket)
     if (!ticket)
         throw new ApiError (httpStatus.NOT_FOUND, "Ticket not found")
     return ticket

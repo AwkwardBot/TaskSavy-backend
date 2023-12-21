@@ -94,7 +94,9 @@ router
         auth(),
         validate(projectValidation.projectId),
         projectController.addBoard
-    );
+    )
+   
+    
 
 router
     .route('/:projectId/boards/:board')

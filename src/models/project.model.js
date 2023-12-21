@@ -34,8 +34,8 @@ const projectSchema = mongoose.Schema({
 
   status: {
     type: String,
-    enum: ['Pending', 'Working', 'Completed'],
-    default: 'Pending',
+    enum: ['Working', 'Completed'],
+    default: 'Working',
   },
 
   activeStatus: {

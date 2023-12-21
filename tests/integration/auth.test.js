@@ -38,6 +38,7 @@ describe('Auth routes', () => {
         name: newUser.name,
         email: newUser.email,
         role: 'user',
+        plan: '1',
         isEmailVerified: false,
       });
 
@@ -97,6 +98,7 @@ describe('Auth routes', () => {
         name: userOne.name,
         email: userOne.email,
         role: userOne.role,
+        plan: '1',
         isEmailVerified: userOne.isEmailVerified,
       });
 
