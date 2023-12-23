@@ -1,4 +1,4 @@
-const requirementsService = require('../services/requirementsService');
+const {requirementsService} = require('../services');
 
 // Create a new requirement
 exports.createRequirement = async (req, res) => {

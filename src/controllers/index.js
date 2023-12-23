@@ -6,3 +6,4 @@ module.exports.workspaceController = require('./workspace.controller');
 module.exports.sendbirdController = require('./sendbird.controller');
 module.exports.ticketController = require('./ticket.controller');
 module.exports.ticketTypeController = require('./ticketType.controller')
+module.exports.requirementsController = require('./requirements.controller')
