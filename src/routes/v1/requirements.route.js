@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
-const requirementsController = require('../controllers/requirementsController');
-const { serveSwagger, setupSwagger } = require('../swaggerConfig');
+const {requirementsController} = require('../../controllers');
+
 
 /**
  * @swagger
@@ -130,7 +130,5 @@ router.put('/projects/:projectId/requirements/:requirementId', requirementsContr
  */
 router.delete('/projects/:projectId/requirements/:requirementId', requirementsController.deleteRequirement);
 
-// Swagger setup route
-router.use('/api-docs', serveSwagger, setupSwagger);
 
 module.exports = router;

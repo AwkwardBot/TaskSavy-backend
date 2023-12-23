@@ -7,6 +7,7 @@ const sprintRoutes = require('./sprint.route');
 const sendbirdRoutes = require('./sendbird.route')
 const ticketRoutes = require('./ticket.route')
 const ticketTypeRoutes = require('./ticketType.route')
+const requirementsRoutes = require('./requirements.route')
 
 
 const config = require('../../config/config');
@@ -37,6 +38,10 @@ const defaultRoutes = [
   {
     path: '/projects/:projectId/ticket',
     route: ticketRoutes,
+  },
+  {
+    path: '/projects/:projectId/requirements',
+    route: requirementsRoutes,
   },
   {
     path: '/sendbird',

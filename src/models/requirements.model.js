@@ -11,6 +11,9 @@ const RequirementsSchema = mongoose.Schema({
     },
     requirements : [
         {
+            requirement_id: {
+                type: String
+            },
             requirement: {
                 type: String,
 

@@ -1,4 +1,4 @@
-const Requirements = require('../models/Requirements');
+const {Requirements} = require('../models');
 
 // Create a new requirement
 const createRequirement = async (projectId, module_name, requirements) => {
