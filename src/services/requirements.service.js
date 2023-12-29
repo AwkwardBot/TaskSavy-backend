@@ -1,9 +1,9 @@
 const {Requirements} = require('../models');
-
+const ApiError = require('../utils/ApiError');
 // Create a new requirement
-const createRequirement = async (projectId, module_name, requirements) => {
+const createRequirement = async (reqBody) => {
     try {
-        const newRequirement = await Requirements.create({ projectId, module_name, requirements });
+        const newRequirement = await Requirements.create(reqBody);
         return newRequirement;
     } catch (err) {
         throw new Error(err.message);
@@ -42,6 +42,13 @@ const deleteRequirement = async (requirementId) => {
         throw new Error(err.message);
     }
 };
+
+
+
+
+
+
+
 
 module.exports = {
     createRequirement,

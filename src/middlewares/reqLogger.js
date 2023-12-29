@@ -1,5 +1,6 @@
 const reqLog = (req, res, next) => {
-  console.log(req.body);
+  console.log("Body:", req.body);
+  console.log(req.files)
   next();
 };
 

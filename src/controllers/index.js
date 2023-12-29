@@ -7,3 +7,4 @@ module.exports.sendbirdController = require('./sendbird.controller');
 module.exports.ticketController = require('./ticket.controller');
 module.exports.ticketTypeController = require('./ticketType.controller')
 module.exports.requirementsController = require('./requirements.controller')
+module.exports.documentsController = require('./documents.controller');

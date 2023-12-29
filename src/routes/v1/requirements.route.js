@@ -1,7 +1,7 @@
 const express = require('express');
-const router = express.Router();
 const {requirementsController} = require('../../controllers');
 
+const router = express.Router({ mergeParams: true });
 
 /**
  * @swagger
@@ -39,7 +39,7 @@ const {requirementsController} = require('../../controllers');
  *       '500':
  *         description: Server error
  */
-router.post('/projects/:projectId/requirements', requirementsController.createRequirement);
+router.post('/', requirementsController.createRequirement);
 
 /**
  * @swagger
@@ -64,7 +64,7 @@ router.post('/projects/:projectId/requirements', requirementsController.createRe
  *       '500':
  *         description: Server error
  */
-router.get('/projects/:projectId/requirements', requirementsController.getRequirementsByProjectId);
+router.get('/', requirementsController.getRequirementsByProjectId);
 
 /**
  * @swagger
@@ -101,7 +101,7 @@ router.get('/projects/:projectId/requirements', requirementsController.getRequir
  *       '500':
  *         description: Server error
  */
-router.put('/projects/:projectId/requirements/:requirementId', requirementsController.updateRequirement);
+router.put('/:requirementId', requirementsController.updateRequirement);
 
 /**
  * @swagger
@@ -128,7 +128,7 @@ router.put('/projects/:projectId/requirements/:requirementId', requirementsContr
  *       '500':
  *         description: Server error
  */
-router.delete('/projects/:projectId/requirements/:requirementId', requirementsController.deleteRequirement);
+router.delete('/:requirementId', requirementsController.deleteRequirement);
 
 
 module.exports = router;

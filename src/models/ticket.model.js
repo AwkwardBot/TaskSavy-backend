@@ -44,8 +44,30 @@ const ticketSchema = new mongoose.Schema({
         type: String,
         enum: ['Low', 'Normal', 'High'],
         default: 'Normal'
-    }
+    },
+    
+    attachments: [
+        {
+
+          name: String, 
+          url: String, 
+          type: String 
+        }
+      ],
+      comments: [
+        {
+
+          text: String, 
+          author: {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: 'User',
+          },
+          createdAt: Date 
+        }
+      ]
 });
+
+
 
 ticketSchema.pre('save', async function (next) {
     if (this.isNew) {

@@ -35,6 +35,13 @@ router
         projectAccess,
         checkRole('Admin'),
         projectController.deleteProject
+    )   
+    .put(
+        auth(),
+        validate(projectValidation.projectId),
+        projectAccess,
+        checkRole('Admin'),
+        projectController.updateProject
     )
 
 // Tags
@@ -88,10 +95,13 @@ router
     .get(
         auth(),
         validate(projectValidation.projectId),
+        projectAccess,
+        checkRole(MANAGER),
         projectController.getBoards
     )
     .post(
         auth(),
+        projectAccess,
         validate(projectValidation.projectId),
         projectController.addBoard
     )

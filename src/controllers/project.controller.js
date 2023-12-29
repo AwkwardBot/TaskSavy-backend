@@ -36,7 +36,7 @@ const getProject = catchAsync(async (req, res) => {
 
 const updateProject = catchAsync(async (req, res) => {
     const project = await projectService.updateProjectById(
-        req.params.projectId,
+        req.project,
         req.body
     );
     res.status(httpStatus.OK).send(project);
@@ -124,8 +124,9 @@ const getBoards = catchAsync(async (req, res) => {
 const getBoard = catchAsync(async (req, res) => {});
 
 const addBoard = catchAsync(async (req, res) => {
-    // const boards = await projectService.addTag(req.params.projectId, req.user, req.body.tag)
-    // res.send(tags)
+    console.log(req.params.projectId,"fds" ,req.project, req.body)
+    const boards = await projectService.addBoard(req.project, req.body)
+    res.status(httpStatus.OK).send(boards)
 });
 
 const removeBoard = catchAsync(async (req, res) => {

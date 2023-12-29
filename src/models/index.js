@@ -7,4 +7,3 @@ module.exports.Ticket = require('./ticket.model')
 module.exports.TicketType = require('./ticketType.model')
 module.exports.LinkedTicket = require('./linkedTicket.model')
 module.exports.Requirements = require('./requirements.model' )
-
