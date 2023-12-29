@@ -29,8 +29,7 @@ const ticketSchema = new mongoose.Schema({
         default: "Pending"
     },
     due_date: {
-        type: Date,
-        required: true
+        type: Date
     },
     created_at: {
         type: Date,

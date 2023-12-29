@@ -11,7 +11,7 @@ const createTicket = {
         title: Joi.string().required(),
         description: Joi.string().required(),
         assignee: Joi.custom(objectId),
-        due_date: Joi.date().required(),
+        due_date: Joi.date(),
         sprint: Joi.custom(objectId)
         
     })
