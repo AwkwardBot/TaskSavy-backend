@@ -7,7 +7,7 @@ const createTicket = async (projectId, ticketBody) => {
     ticketBody.projectId = projectId;
     const ticketId = ticketBody.ticket_type_id;
 
-    const availableTickets = ticketTypeService.findTicketTypeExistById(
+    const availableTickets = ticketTypeService.getTicketTypeById(
         projectId,
         ticketId
     );
@@ -16,7 +16,11 @@ const createTicket = async (projectId, ticketBody) => {
         throw new ApiError(httpStatus.BAD_REQUEST, 'Invalid ticket Id');
     }
 
-    const ticketres = await Ticket.create(ticketBody);
+    if (availableTickets) {
+        const ticketres = await Ticket.create(ticketBody);
+    }
+
+    
 
     if (!ticketres) {
         throw new ApiError(httpStatus.BAD_REQUEST, 'Error Generating Ticket');

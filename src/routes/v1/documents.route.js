@@ -16,13 +16,29 @@ const ADMIN = 'Admin';
 router
     .route('/')
     .post(
+        reqLog,
         auth(),
         validate(projectValidation.projectId),
         projectAccess,
-        reqLog,
         documentsController.uploadFile
-
+    )
+    .get(
+        auth(),
+        
+        validate(projectValidation.projectId),
+        projectAccess,
+        documentsController.readFiles
+    )
+    .patch(
+        auth(),
+        validate(projectValidation.projectId),
+        projectAccess,
+        documentsController.deleteFile
     )
 
+
+router
+        .route('/:file')
+        
 
 module.exports = router;

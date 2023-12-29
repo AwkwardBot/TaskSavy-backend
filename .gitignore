@@ -11,5 +11,7 @@ yarn-error.log
 # Code coverage
 coverage
 
+# Multer Files
+files
 
 bun.lockb
