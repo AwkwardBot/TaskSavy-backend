@@ -13,7 +13,7 @@ const projectAccess = async (req, res, next) => {
         return next(new ApiError(httpStatus.NOT_FOUND, "Project not Found"))
     }
     if (!project.members.some(member => member.userId.equals(userId))) {
-        return next( new ApiError(httpStatus.UNAUTHORIZED, "You do not have permission to access this project") )
+        return next( new ApiError(httpStatus.FORBIDDEN, "You do not have permission to access this project") )
     }
     
     req.project = project;

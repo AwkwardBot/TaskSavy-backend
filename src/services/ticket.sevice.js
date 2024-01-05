@@ -7,18 +7,18 @@ const createTicket = async (projectId, ticketBody) => {
     ticketBody.projectId = projectId;
     const ticketId = ticketBody.ticket_type_id;
 
-    const availableTickets = ticketTypeService.getTicketTypeById(
+    const checkTicketType = ticketTypeService.getTicketTypeById(
         projectId,
         ticketId
     );
 
-    if (!availableTickets) {
+    if (!checkTicketType) {
         throw new ApiError(httpStatus.BAD_REQUEST, 'Invalid ticket Id');
     }
 
-    if (availableTickets) {
-        const ticketres = await Ticket.create(ticketBody);
-    }
+    
+    const ticketres = await Ticket.create(ticketBody);
+    
 
     
 
@@ -64,17 +64,20 @@ const updateTicket = async (ticketId, ticketBody) => {
             };
         }
 
-        // Update fields of the ticket using ticketBody
         Object.assign(ticket, ticketBody);
 
-        // Save the updated ticket
         const updatedTicket = await ticket.save();
 
         console.log("Updated", updatedTicket);
-        return updatedTicket;
+        return {
+            success: true,
+            data: updatedTicket
+        };
     } catch (e) {
+        console.log("Error Here")
         console.error(e); // Corrected 'consle' to 'console'
         return {
+            
             success: false,
             message: e.message,
         };

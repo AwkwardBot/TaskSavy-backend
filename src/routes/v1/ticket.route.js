@@ -18,7 +18,7 @@ router
     .route('/:ticketId')
     .get(auth(), projectAccess, ticketController.getTicketById)
     .delete()
-    .patch(auth(), validate(), projectAccess, ticketController.updateTicket)
+    .patch(auth(), validate(ticketValidation.ticketBody), projectAccess, ticketController.updateTicket)
 
 
 router
@@ -177,7 +177,7 @@ module.exports = router
 
 /**
  * @swagger
- * /projects/{projectId}/ticket/sprints/{sprintId}:
+ * /projects/{projectId}/ticket/sprint/{sprintId}:
  *   
  *   get:
  *     summary: Get all tickets of a project

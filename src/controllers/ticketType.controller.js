@@ -31,9 +31,11 @@ const getTicketTypeById = catchAsync(async(req, res) => {
     const projectId = req.params.projectId;
     const ticketTypeId = req.params.ticketTypeId
     const ticketType = await ticketTypeService.getTicketTypeById(projectId, ticketTypeId)
-
+    if(!ticketType)
+        throw new ApiError(httpStatus.BAD_REQUEST, "Invalid Ticket Type Id")
+            
     res.status(httpStatus.OK).send(ticketType)
-
+    
 })
 
 

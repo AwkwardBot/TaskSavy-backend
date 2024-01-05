@@ -158,6 +158,8 @@ router
     .delete(
         auth(),
         validate(projectValidation.memberId),
+        projectAccess,
+        checkRole(MANAGER),
         projectController.deleteMember
     )
     .patch(

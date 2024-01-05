@@ -1,5 +1,9 @@
 const express = require('express');
 const {requirementsController} = require('../../controllers');
+const { sprintValidation, projectValidation } = require('../../validations');
+const { projectAccess } = require('../../middlewares/Access');
+const validate = require('../../middlewares/validate');
+const auth = require('../../middlewares/auth');
 
 const router = express.Router({ mergeParams: true });
 
@@ -129,6 +133,15 @@ router.put('/:requirementId', requirementsController.updateRequirement);
  *         description: Server error
  */
 router.delete('/:requirementId', requirementsController.deleteRequirement);
+
+
+router
+    .route('/:moduleId')
+    .patch(
+        auth(),
+        validate(projectValidation.projectId),
+        projectAccess,
+        requirementsController.addRequirmentToModule)
 
 
 module.exports = router;

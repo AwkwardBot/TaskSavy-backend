@@ -53,4 +53,19 @@ exports.deleteRequirement = async (req, res) => {
     }
 };
 
+exports.addRequirmentToModule = catchAsync(async(req, res)=> {
+
+    const projectId = req.params.projectId;
+    const moduleId = req.params.moduleId;
+    const requirementBody = req.body
+
+    const reqModule = requirementsService.addRequirmentToModule(requirementBody, moduleId, projectId)
+
+    res.status(httpStatus.OK).send(reqModule)
+
+})
+
+
+
+
 

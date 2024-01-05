@@ -12,7 +12,7 @@ const createProject = {
 const projectId = {
   params: Joi.object().keys({
     projectId: Joi.required().custom(objectId),
-  }),
+  }).unknown()
 };
 
 const updateProject = {

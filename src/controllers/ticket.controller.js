@@ -27,7 +27,7 @@ const getTicketsBySprint = catchAsync(async (req, res) => {
 });
 
 const getTicketById = catchAsync(async (req, res) => {
-    console.log("me runn")
+  
 
     const ticket = await ticketService.getTicketById(req.params.ticketId)
     res.status(httpStatus.OK).send(ticket)
@@ -40,7 +40,10 @@ const updateTicket = catchAsync(async (req, res) => {
     
     const ticket = await ticketService.updateTicket(req.params.ticketId, req.body)
 
-    res.status(httpStatus.OK).send(ticket)
+    if(!ticket.success)
+        res.status(httpStatus.BAD_REQUEST).send(ticket.message)
+    else
+        res.status(httpStatus.OK).send(ticket.data)
 
 });
 

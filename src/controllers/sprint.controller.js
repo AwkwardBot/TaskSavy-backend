@@ -5,6 +5,9 @@ const catchAsync = require('../utils/catchAsync');
 const { sprintService } = require('../services');
 
 const createSprint = catchAsync(async (req, res) => {
+
+    // if(req.body.start_date)
+
     const sprint = await sprintService.createSprint(
         req.body,
         req.params.projectId

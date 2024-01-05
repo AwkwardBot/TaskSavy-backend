@@ -246,11 +246,14 @@ const getMemberById = async (project, memberId) => {
     return project.members.find((m) => m.id === memberId);
 };
 
-const addMember = async (project, members) => {
-    for (var member in members) {
-		var user = userService.getUserByEmail(member)
+const addMember = async (project, member) => {
+        console.log(member)
+		var user = await userService.getUserByEmail(member.email)
         project.members.push({ userId: user._id, role: member.role });
-    }
+
+        console.log(user)
+
+        console.log(project.members)
 
     await project.save();
     return project;
@@ -258,7 +261,8 @@ const addMember = async (project, members) => {
 
 const deleteMember = async(project, member) => {
 
-	project.members = project.members.filter((m) => m !== member);
+	project.members = await project.members.filter((m) => m.userId != member);
+    console.log(project.members, member)
 	project.save()
 	return project.members
 
