@@ -19,9 +19,6 @@ const createTicket = async (projectId, ticketBody) => {
     
     const ticketres = await Ticket.create(ticketBody);
     
-
-    
-
     if (!ticketres) {
         throw new ApiError(httpStatus.BAD_REQUEST, 'Error Generating Ticket');
     }
@@ -91,6 +88,15 @@ const getTicketById = async (ticketId) => {
     return ticket
 }
 
+const getTicketsBySprint = async (sprintId) => {
+
+    const tickets = await Ticket.find({sprint:sprintId })
+
+    console.log(tickets)
+
+    return tickets
+}
+
 
 
 module.exports = {
@@ -98,5 +104,6 @@ module.exports = {
     getTickets,
     deleteTicketbyId,
     updateTicket,
-    getTicketById
+    getTicketById,
+    getTicketsBySprint
 };

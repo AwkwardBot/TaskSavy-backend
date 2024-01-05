@@ -20,7 +20,7 @@ const getTickets = catchAsync(async (req, res) => {
 });
 
 const getTicketsBySprint = catchAsync(async (req, res) => {
-    const tickets = await ticketService.getTicketsBySprint(req.params.projectId, req.params.sprintId)
+    const tickets = await ticketService.getTicketsBySprint(req.params.sprintId)
     res.status(httpStatus.OK).send(tickets)
 
 
