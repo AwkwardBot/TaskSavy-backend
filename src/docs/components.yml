@@ -219,9 +219,6 @@ components:
         message:
           type: string
     
-    
-      
-    
   responses:
     DuplicateEmail:
       description: Email already taken
@@ -266,4 +263,4 @@ components:
       scheme: bearer
       bearerFormat: JWT
 
- 
+  
