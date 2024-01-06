@@ -61,7 +61,6 @@ const projectSchema = mongoose.Schema({
       },
       order: {
         type: Number,
-        required: true
       }
     },
   ],
