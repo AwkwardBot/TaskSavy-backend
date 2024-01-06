@@ -30,8 +30,16 @@ const statusValidation = {
     })
 };
 
+const sprintParamsValidation = {
+    params: Joi.object().keys({
+        projectId: Joi.required().custom(objectId),
+        sprintId: Joi.required().custom(objectId)
+    }),
+}
+
 module.exports = {
     createSprint,
     sprintId,
-    statusValidation
+    statusValidation,
+    sprintParamsValidation
 };

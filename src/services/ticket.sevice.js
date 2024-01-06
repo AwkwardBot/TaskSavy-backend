@@ -7,17 +7,18 @@ const createTicket = async (projectId, ticketBody) => {
     ticketBody.projectId = projectId;
     const ticketId = ticketBody.ticket_type_id;
 
-    const availableTickets = ticketTypeService.findTicketTypeExistById(
+    const checkTicketType = ticketTypeService.getTicketTypeById(
         projectId,
         ticketId
     );
 
-    if (!availableTickets) {
+    if (!checkTicketType) {
         throw new ApiError(httpStatus.BAD_REQUEST, 'Invalid ticket Id');
     }
 
+    
     const ticketres = await Ticket.create(ticketBody);
-
+    
     if (!ticketres) {
         throw new ApiError(httpStatus.BAD_REQUEST, 'Error Generating Ticket');
     }
@@ -49,7 +50,6 @@ const deleteTicketbyId = async (projectId, ticketId) => {
 }
 
 const updateTicket = async (ticketId, ticketBody) => {
-    console.log("Body: ", ticketBody);
     try {
         const ticket = await Ticket.findById(ticketId);
 
@@ -60,17 +60,19 @@ const updateTicket = async (ticketId, ticketBody) => {
             };
         }
 
-        // Update fields of the ticket using ticketBody
         Object.assign(ticket, ticketBody);
 
-        // Save the updated ticket
         const updatedTicket = await ticket.save();
 
         console.log("Updated", updatedTicket);
-        return updatedTicket;
-    } catch (e) {
-        console.error(e); // Corrected 'consle' to 'console'
         return {
+            success: true,
+            data: updatedTicket
+        };
+    } catch (e) {
+        console.error(e); 
+        return {
+            
             success: false,
             message: e.message,
         };
@@ -84,6 +86,20 @@ const getTicketById = async (ticketId) => {
     return ticket
 }
 
+const getTicketsBySprint = async (sprintId) => {
+
+    const tickets = await Ticket.find({sprint:sprintId })
+    console.log(tickets)
+    return tickets
+}
+
+
+const removeSprint = async (sprintId) => {
+    await Ticket.updateMany(
+      { sprint: sprintId },
+      { $unset: { sprint: 1 } } 
+    );
+  };
 
 
 module.exports = {
@@ -91,5 +107,7 @@ module.exports = {
     getTickets,
     deleteTicketbyId,
     updateTicket,
-    getTicketById
+    getTicketById,
+    getTicketsBySprint,
+    removeSprint
 };

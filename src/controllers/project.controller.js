@@ -36,7 +36,7 @@ const getProject = catchAsync(async (req, res) => {
 
 const updateProject = catchAsync(async (req, res) => {
     const project = await projectService.updateProjectById(
-        req.params.projectId,
+        req.project,
         req.body
     );
     res.status(httpStatus.OK).send(project);
@@ -121,17 +121,22 @@ const getBoards = catchAsync(async (req, res) => {
     res.send(boards);
 });
 
+
+
+
+
 const getBoard = catchAsync(async (req, res) => {});
 
 const addBoard = catchAsync(async (req, res) => {
-    // const boards = await projectService.addTag(req.params.projectId, req.user, req.body.tag)
-    // res.send(tags)
+   
+    const boards = await projectService.addBoard(req.project, req.body)
+    res.status(httpStatus.OK).send(boards)
 });
 
 const removeBoard = catchAsync(async (req, res) => {
     await projectService.deleteBoard(
         req.param.projectId,
-        req.body.board
+        
     );
     res.status(httpStatus.NO_CONTENT).send();
 });
@@ -143,9 +148,12 @@ const getMembers = catchAsync(async (req, res) => {
     res.status(httpStatus.OK).send(members)
 });
 
+
+
+
 const addMembers = catchAsync(async (req, res) => {
 
-    await projectService.addMember(req.project, req.body.members);
+    await projectService.addMember(req.project, req.body);
     res.status(httpStatus.NO_CONTENT).send();
 
 });
@@ -158,6 +166,10 @@ const getMemberById = catchAsync(async (req, res) => {
 });
 
 const deleteMember = catchAsync(async (req, res) => {
+
+    await projectService.deleteMember(req.project, req.params.memberId)
+
+    res.status(httpStatus.NO_CONTENT).send()
 
     
 

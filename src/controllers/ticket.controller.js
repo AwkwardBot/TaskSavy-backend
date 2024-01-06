@@ -20,14 +20,14 @@ const getTickets = catchAsync(async (req, res) => {
 });
 
 const getTicketsBySprint = catchAsync(async (req, res) => {
-    const tickets = await ticketService.getTicketsBySprint(req.params.projectId, req.params.sprintId)
+    const tickets = await ticketService.getTicketsBySprint(req.params.sprintId)
     res.status(httpStatus.OK).send(tickets)
 
 
 });
 
 const getTicketById = catchAsync(async (req, res) => {
-    console.log("me runn")
+  
 
     const ticket = await ticketService.getTicketById(req.params.ticketId)
     res.status(httpStatus.OK).send(ticket)
@@ -36,11 +36,13 @@ const getTicketById = catchAsync(async (req, res) => {
 
 const updateTicket = catchAsync(async (req, res) => {
 
-    console.log(req.body)
     
     const ticket = await ticketService.updateTicket(req.params.ticketId, req.body)
 
-    res.status(httpStatus.OK).send(ticket)
+    if(!ticket.success)
+        res.status(httpStatus.BAD_REQUEST).send(ticket.message)
+    else
+        res.status(httpStatus.OK).send(ticket.data)
 
 });
 

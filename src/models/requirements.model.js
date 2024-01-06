@@ -7,7 +7,7 @@ const RequirementsSchema = mongoose.Schema({
     },
     module_name: {
         type: String
-
+        
     },
     requirements : [
         {
@@ -30,6 +30,18 @@ const RequirementsSchema = mongoose.Schema({
         }
     ]
 })
+
+
+
+RequirementsSchema.pre('save', async function (next) {
+    if (this.isNew) {
+      if(!this.requirements){
+        this.requirements=[]
+      }
+    }
+  
+    next();
+  });
 
 
 /**

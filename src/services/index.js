@@ -9,4 +9,5 @@ module.exports.quickbloxService = require('./quickblox.service');
 module.exports.sendbirdService = require('./sendbird.service');
 module.exports.ticketService = require('./ticket.sevice');
 module.exports.ticketTypeService = require('./ticketType.service')
-module.exports.requirementsServices = require('./requirements.service')
+module.exports.requirementsService = require('./requirements.service');
+module.exports.documentsService = require('./documents.service')

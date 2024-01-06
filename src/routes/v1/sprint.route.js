@@ -43,16 +43,18 @@ router
     )
     .put(
         auth(),
-        validate(sprintValidation.updateSprint),
+        validate(sprintValidation.sprintParamsValidation),
         projectAccess,
         checkRole(MANAGER),
+        sprintController.updateSprint
         
     )
     .delete(
         auth(),
-        validate(sprintValidation.statusValidation),
+        validate(sprintValidation.sprintParamsValidation),
         projectAccess,
         checkRole(ADMIN),
+        sprintController.deleteSprint
         
     );
 

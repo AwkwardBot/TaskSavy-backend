@@ -12,8 +12,18 @@ const createProject = {
 const projectId = {
   params: Joi.object().keys({
     projectId: Joi.required().custom(objectId),
-  }),
+  }).unknown()
 };
+
+
+const ProjectIdBoardId = {
+  params: Joi.object().keys({
+    projectId: Joi.required().custom(objectId),
+    boardId: Joi.required().custom(objectId),
+  }).unknown()
+};
+
+
 
 const updateProject = {
   params: Joi.object().keys({
@@ -76,4 +86,6 @@ module.exports = {
   updateProject,
   memberId,
   changeMemberRole,
+  ProjectIdBoardId,
+  
 };

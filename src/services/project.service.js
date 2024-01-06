@@ -36,7 +36,15 @@ const getProjects = async (userId) => {
     });
 };
 
-const updateProjectById = async (id) => {};
+const updateProjectById = async (project, body) => {
+    
+    Object.assign(project, body);
+    
+    console.log(project, body)
+    project.save()
+    return project;
+
+};
 
 const deleteProject = async (projectId) => {
 
@@ -56,7 +64,6 @@ const deleteProject = async (projectId) => {
  * @param {ObjectId} userId
  * @param {ObjectId} status
  * @returns {Promise<Project>}
- * @throws {ApiError}
  */
 
 const changeActiveStatus = async (project, status) => {
@@ -169,9 +176,12 @@ const getBoard = async (project, boardId) => {
 }
 
 const addBoard = async (project, boardBody) => {
+    const count = project.boards.length;
+    boardBody.order = count+1;
     project.boards.push(boardBody);
+
     await project.save();
-    return project;
+    return project.boards;
 }
  
 const updateBoards = async (project, updateBody) => {
@@ -236,11 +246,10 @@ const getMemberById = async (project, memberId) => {
     return project.members.find((m) => m.id === memberId);
 };
 
-const addMember = async (project, members) => {
-    for (var member in members) {
-		var user = userService.getUserByEmail(member)
-        project.members.push({ userId: user._id, role: member.role });
-    }
+const addMember = async (project, member) => {
+
+    var user = await userService.getUserByEmail(member.email)
+    project.members.push({ userId: user._id, role: member.role });
 
     await project.save();
     return project;
@@ -248,7 +257,7 @@ const addMember = async (project, members) => {
 
 const deleteMember = async(project, member) => {
 
-	project.members = project.members.filter((m) => m !== member);
+	project.members = await project.members.filter((m) => m.userId != member);
 	project.save()
 	return project.members
 

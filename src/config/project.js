@@ -1,11 +1,11 @@
 const defaultBoards = [
-  { name: 'Pending', description: 'Tasks yet to be scheduled', color: '#f87171' },
-  { name: 'Working', description: 'Tasks currently being worked on', color: '#818cf8' },
-  { name: 'Completed', description: 'Tasks that are completed', color: '#4ade80' },
+  { name: 'Pending', description: 'Tasks yet to be scheduled', color: '#f87171', order:1 },
+  { name: 'Working', description: 'Tasks currently being worked on', color: '#818cf8', order:2 },
+  { name: 'Completed', description: 'Tasks that are completed', color: '#4ade80', order:3 },
 ];
 
 const defaultTickets = [
-  {name: "Odessey", theme: 
+  {name: "Epic", theme: 
   { bg: '#38bdf8', text: '#1e3a8a' }
   },
   {name: "User Story", theme: { bg: '#38bdf8', text: '#1e3a8a' }  },

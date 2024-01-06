@@ -34,7 +34,7 @@ const projectSchema = mongoose.Schema({
 
   status: {
     type: String,
-    enum: ['Working', 'Completed'],
+    enum: ['Pending', 'Working', 'Completed'],
     default: 'Working',
   },
 
@@ -59,6 +59,10 @@ const projectSchema = mongoose.Schema({
         type: String,
         required: true,
       },
+      order: {
+        type: Number,
+        required: true
+      }
     },
   ],
 

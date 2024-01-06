@@ -1,35 +1,30 @@
+const httpStatus = require('http-status');
 const {requirementsService} = require('../services');
+const catchAsync = require('../utils/catchAsync');
 
-// Create a new requirement
-exports.createRequirement = async (req, res) => {
-    try {
+exports.createRequirement = catchAsync(async (req, res) => {
         const { projectId } = req.params;
-        const { module_name, requirements } = req.body;
+        
+        req.body.projectId = projectId
 
         const newRequirement = await requirementsService.createRequirement(
-            projectId,
-            module_name,
-            requirements
+            req.body
         );
 
-        res.status(201).json(newRequirement);
-    } catch (err) {
-        res.status(500).json({ error: err.message });
-    }
-};
+        res.status(httpStatus.OK).json(newRequirement);
+    
+});
 
 // Get requirements by projectId
-exports.getRequirementsByProjectId = async (req, res) => {
-    try {
+exports.getRequirementsByProjectId = catchAsync(async (req, res) => {
+
         const { projectId } = req.params;
 
         const requirements = await requirementsService.getRequirementsByProjectId(projectId);
 
         res.status(200).json(requirements);
-    } catch (err) {
-        res.status(500).json({ error: err.message });
-    }
-};
+
+});
 
 // Update a requirement
 exports.updateRequirement = async (req, res) => {
@@ -57,3 +52,20 @@ exports.deleteRequirement = async (req, res) => {
         res.status(500).json({ error: err.message });
     }
 };
+
+exports.addRequirmentToModule = catchAsync(async(req, res)=> {
+
+    const projectId = req.params.projectId;
+    const moduleId = req.params.moduleId;
+    const requirementBody = req.body
+
+    const reqModule = requirementsService.addRequirmentToModule(requirementBody, moduleId, projectId)
+
+    res.status(httpStatus.OK).send(reqModule)
+
+})
+
+
+
+
+

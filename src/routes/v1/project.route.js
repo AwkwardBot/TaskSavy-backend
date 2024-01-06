@@ -36,6 +36,13 @@ router
         checkRole('Admin'),
         projectController.deleteProject
     )
+    .put(
+        auth(),
+        validate(projectValidation.projectId),
+        projectAccess,
+        checkRole('Admin'),
+        projectController.updateProject
+    );
 
 // Tags
 router
@@ -88,21 +95,22 @@ router
     .get(
         auth(),
         validate(projectValidation.projectId),
+        projectAccess,
+        checkRole(MANAGER),
         projectController.getBoards
     )
     .post(
         auth(),
+        projectAccess,
         validate(projectValidation.projectId),
         projectController.addBoard
-    )
-   
-    
+    );
 
 router
-    .route('/:projectId/boards/:board')
+    .route('/:projectId/boards/:boardId')
     .get(
         auth(),
-        validate(projectValidation.projectId),
+        validate(projectValidation.ProjectIdBoardId),
         projectController.getBoard
     )
     .delete(
@@ -122,21 +130,25 @@ router
     .get(
         auth(),
         validate(projectValidation.projectId),
-		projectAccess,
+        projectAccess,
         projectController.getMembers
     )
     .patch(
         auth(),
         validate(projectValidation.projectId),
-		projectAccess,
-		checkRole(MANAGER),
+        projectAccess,
+        checkRole(MANAGER),
         projectController.addMembers
     );
 
-router 
+router
     .route('/:projectId/members/details')
-    .get(auth(), validate(projectValidation.projectId), projectAccess, projectController.getMembersDetail)
-
+    .get(
+        auth(),
+        validate(projectValidation.projectId),
+        projectAccess,
+        projectController.getMembersDetail
+    );
 
 router
     .route('/:projectId/members/:memberId')
@@ -148,6 +160,8 @@ router
     .delete(
         auth(),
         validate(projectValidation.memberId),
+        projectAccess,
+        checkRole(MANAGER),
         projectController.deleteMember
     )
     .patch(
@@ -167,6 +181,8 @@ module.exports = router;
  *     description: Projects's Tag Management and Retrieval
  *   - name: Project Members
  *     description: Project's Members Management and Retrieval
+ *   - name: Project Board
+ *     description: Project's Board Management and Retrieval
  *
  */
 
@@ -241,7 +257,7 @@ module.exports = router;
  *         $ref: '#/components/responses/NotFound'
  *
  */
- 
+
 /**
  * @swagger
  * /projects/{projectId}:
@@ -267,7 +283,7 @@ module.exports = router;
  *         $ref: '#/components/responses/Forbidden'
  *       "404":
  *         $ref: '#/components/responses/NotFound'
- * 
+ *
  *   delete:
  *     summary: Delete user's project
  *     tags: [Projects]
@@ -290,7 +306,7 @@ module.exports = router;
  *         $ref: '#/components/responses/Forbidden'
  *       "404":
  *         $ref: '#/components/responses/NotFound'
- *      
+ *
  */
 
 /**
@@ -434,8 +450,8 @@ module.exports = router;
  *     description: Manager and Admin can delete the tags
  *     security:
  *       - bearerAuth: []
- *     
- *     
+ *
+ *
  */
 
 /**
@@ -543,15 +559,15 @@ module.exports = router;
  *         content:
  *           application/json:
  *             schema:
- *               $ref: '#/components/schemas/Members'
+ *               $ref: '#/components/schemas/Member'
  *       '401':
  *         $ref: '#/components/responses/Unauthorized'
  *       "403":
  *         $ref: '#/components/responses/Forbidden'
  *       "404":
  *         $ref: '#/components/responses/NotFound'
- *   	
- *   
+ *
+ *
  *   patch:
  *     summary: Add Member
  *     tags: [Project Members]
@@ -602,11 +618,20 @@ module.exports = router;
  *         $ref: '#/components/responses/Forbidden'
  *       "404":
  *         $ref: '#/components/responses/NotFound'
- * 
+ *   post:
+ *     summary: Get detail project members
+ *     tags: [Project Members]
+ *     descriptions: Only authorized users can fetch the members
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - name: projectId
+ *         in: path
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: Project id
  */
-
-
-
 
 /**
  * @swagger
@@ -629,8 +654,8 @@ module.exports = router;
  *         required: true
  *         schema:
  *           type: string
- *         description: Member id   
- *             
+ *         description: Member id
+ *
  *     responses:
  *       '200':
  *         description: OK
@@ -644,8 +669,8 @@ module.exports = router;
  *         $ref: '#/components/responses/Forbidden'
  *       "404":
  *         $ref: '#/components/responses/NotFound'
- *   	
- *   
+ *
+ *
  *   delete:
  *     summary: Get project members
  *     tags: [Project Members]
@@ -664,7 +689,7 @@ module.exports = router;
  *         required: true
  *         schema:
  *           type: string
- *         description: Member id  
+ *         description: Member id
  *     responses:
  *       '204':
  *         description: Deleted Successfully
@@ -700,14 +725,276 @@ module.exports = router;
  *           application/json:
  *             schema:
  *               $ref: '#/components/schemas/MemberDetail'
- *           
+ *
  *       '401':
  *         $ref: '#/components/responses/Unauthorized'
  *       "403":
  *         $ref: '#/components/responses/Forbidden'
  *       "404":
- *         $ref: '#/components/responses/NotFound' 
+ *         $ref: '#/components/responses/NotFound'
+ *
+ *
+ */
+
+// Project Boards
+/**
+ * @swagger
+ * '/projects/{projectId}/boards':
+ *   get:
+ *     summary: Get all columns of board
+ *     tags: [Project Board]
+ *     descriptions: Only authorized users can fetch the board
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - name: projectId
+ *         in: path
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: Project id
+ *     responses:
+ *       '200':
+ *         description: OK
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: array
+ *               items:
+ *                 $ref: '#/components/schemas/Board'
+ *       '401':
+ *         $ref: '#/components/responses/Unauthorized'
+ *       "403":
+ *         $ref: '#/components/responses/Forbidden'
+ *       "404":
+ *         $ref: '#/components/responses/NotFound'
+ *
+ *   post:
+ *     summary: Add Column
+ *     tags: [Project Board]
+ *     descriptions: Only authorized users can add the columns
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - name: projectId
+ *         in: path
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: Project id
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             '$ref': '#/components/schemas/Board'
+ *     responses:
+ *       '204':
+ *         description: OK
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: array
+ *               items:
+ *                 $ref: '#/components/schemas/Board'
+ *       '401':
+ *         $ref: '#/components/responses/Unauthorized'
+ *       "403":
+ *         $ref: '#/components/responses/Forbidden'
+ *       "404":
+ *         $ref: '#/components/responses/NotFound'
  * 
  * 
  */
 
+/**
+ * @swagger
+ * '/projects/{projectId}/boards/{boardId}':
+ *   get:
+ *     summary: Get all columns of board
+ *     tags: [Project Board]
+ *     descriptions: Only authorized users can fetch the board
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - name: projectId
+ *         in: path
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: Project id
+ *       - name: boardId
+ *         in: path
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: Board id
+ *     responses:
+ *       '200':
+ *         description: OK
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: array
+ *               items:
+ *                 $ref: '#/components/schemas/Board'
+ *       '401':
+ *         $ref: '#/components/responses/Unauthorized'
+ *       "403":
+ *         $ref: '#/components/responses/Forbidden'
+ *       "404":
+ *         $ref: '#/components/responses/NotFound'
+ *   patch:
+ *     summary: Update details of a specific board in a project
+ *     tags: [Project Board]
+ *     descriptions: Only authorized users can add the columns
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - name: projectId
+ *         in: path
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: Project id
+ *       - name: boardId
+ *         in: path
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: Board id
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             '$ref': '#/components/schemas/Board'
+ *     responses:
+ *       '204':
+ *         description: 'Column Updated'
+ *       '401':
+ *         $ref: '#/components/responses/Unauthorized'
+ *       "403":
+ *         $ref: '#/components/responses/Forbidden'
+ *       "404":
+ *         $ref: '#/components/responses/NotFound'
+ * 
+ *   delete:
+ *     summary: Remove a specific board from a project
+ *     tags: [Project Board]
+ *     descriptions: Only authorized users can add the columns
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - name: projectId
+ *         in: path
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: Project id
+ *       - name: boardId
+ *         in: path
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: Board id
+ *     responses:
+ *       '204':
+ *         description: 'Column Deleted'
+ *       '401':
+ *         $ref: '#/components/responses/Unauthorized'
+ *       "403":
+ *         $ref: '#/components/responses/Forbidden'
+ *       "404":
+ *         $ref: '#/components/responses/NotFound'
+ * 
+ */
+
+/**
+
+
+
+    - name: board
+        in: path
+        required: true
+        description: Board identifier
+        schema:
+        type: string
+        example: board-1
+    security:
+    - BearerAuth: []
+    responses:
+    '204':
+        description: Board successfully removed
+    '401':
+        $ref: '#/components/responses/UnauthorizedError'
+    '404':
+        description: Board not found
+
+patch:
+    summary: 
+    tags:
+    - Boards
+    parameters:
+    - name: projectId
+        in: path
+        required: true
+        description: ID of the project
+        schema:
+        type: string
+        example: 1234567890
+    - name: board
+        in: path
+        required: true
+        description: Board identifier
+        schema:
+        type: string
+        example: board-1
+    requestBody:
+    required: true
+    content:
+        application/json:
+        schema:
+            $ref: '#/components/schemas/BoardUpdate'
+    security:
+    - BearerAuth: []
+    responses:
+    '200':
+        description: Successful response
+    '400':
+        description: Invalid input data
+    '401':
+        $ref: '#/components/responses/UnauthorizedError'
+    '404':
+        description: Board not found
+
+*/
+// components:
+//   schemas:
+//     BoardUpdate:
+//       type: object
+//       properties:
+//         name:
+//           type: string
+//           description: Updated name of the board
+//         description:
+//           type: string
+//           description: Updated description of the board
+//         color:
+//           type: string
+//           description: Updated color of the board
+//         order:
+//           type: integer
+//           description: Updated order of the board
+
+//   responses:
+//     UnauthorizedError:
+//       description: Unauthorized access error
+//       content:
+//         application/json:
+//           schema:
+//             type: object
+//             properties:
+//               message:
+//                 type: string
+//                 example: Unauthorized
