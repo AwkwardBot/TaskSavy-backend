@@ -969,32 +969,4 @@ patch:
         description: Board not found
 
 */
-// components:
-//   schemas:
-//     BoardUpdate:
-//       type: object
-//       properties:
-//         name:
-//           type: string
-//           description: Updated name of the board
-//         description:
-//           type: string
-//           description: Updated description of the board
-//         color:
-//           type: string
-//           description: Updated color of the board
-//         order:
-//           type: integer
-//           description: Updated order of the board
 
-//   responses:
-//     UnauthorizedError:
-//       description: Unauthorized access error
-//       content:
-//         application/json:
-//           schema:
-//             type: object
-//             properties:
-//               message:
-//                 type: string
-//                 example: Unauthorized

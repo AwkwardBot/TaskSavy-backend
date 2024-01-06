@@ -112,7 +112,7 @@ const updateTag = catchAsync(async (req, res) => {
 });
 
 const getBoards = catchAsync(async (req, res) => {
-    const boards = await projectService.getBoards();
+    const boards = await projectService.getBoards(req.project);
 
     if (!boards) {
         throw new ApiError('httpStatus.NOT_FOUND', 'No boards found');

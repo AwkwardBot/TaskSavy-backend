@@ -175,6 +175,10 @@ const getBoard = async (project, boardId) => {
 
 }
 
+const reorderBoard = async(project, orderedBoard) => {
+    
+}
+
 const addBoard = async (project, boardBody) => {
     const count = project.boards.length;
     boardBody.order = count+1;
