@@ -60,7 +60,7 @@ const projectSchema = mongoose.Schema({
         required: true,
       },
       order: {
-        type: Number,
+        type: Number
       }
     },
   ],
