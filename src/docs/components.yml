@@ -93,8 +93,7 @@ components:
           type: string
         color: 
           type: string
-        order: 
-          type: integer
+\
 
     Sprint:
       type: object
