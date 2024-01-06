@@ -1,6 +1,7 @@
 const httpStatus = require('http-status');
 const { Sprint } = require('../models');
 const ApiError = require('../utils/ApiError');
+const ticketService = require('./ticket.sevice');
 
 /**
  * Create a new Sprint
@@ -37,7 +38,7 @@ const getSprints = async (projectId) => {
  * @returns {Promise<>}
  */
 
-const getSprintById = async (sprintId, projectId, userId) => {
+const getSprintById = async (sprintId) => {
 
     const sprint = Sprint.findOne({
         _id: sprintId
@@ -50,8 +51,33 @@ const getSprintById = async (sprintId, projectId, userId) => {
     return sprint;
 };
 
+
+const updateSprint = async(sprintId, body) => {
+    const sprint = await Sprint.findById(sprintId)
+    if(!sprint)
+        throw new ApiError(httpStatus.NOT_FOUND, "Sprint does not exist");
+
+    Object.assign(sprint, body);
+    await sprint.save()
+    return sprint
+}
+
+
+const deleteSprint = async(sprintId) =>{
+
+    const sprint = await Sprint.findById(sprintId)
+    if(!sprint) {
+        throw new ApiError(httpStatus.NOT_FOUND, "Sprint does not exist");
+    }
+    await ticketService.removeSprint(sprintId)
+    await sprint.remove()
+    
+    return sprint
+}
 module.exports = {
     createSprint,
     getSprints,
-    getSprintById
+    getSprintById,
+    updateSprint,
+    deleteSprint
 };

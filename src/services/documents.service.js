@@ -41,7 +41,7 @@ const readFiles = async (projectId) => {
     
     const path = `files/${projectId}/`
     
-    console.log(path)
+
 
     if (fs.existsSync(path)) {
         return files = fs.readdirSync(path, {

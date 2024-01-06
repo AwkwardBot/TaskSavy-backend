@@ -44,9 +44,17 @@ const getSprint = catchAsync(async (req, res) => {
 
 const changeSprintStatus = catchAsync(async (req, res) => {});
 
-const updateSprint = catchAsync(async (req, res) => {});
+const updateSprint = catchAsync(async (req, res) => {
 
-const deleteSprint = catchAsync(async (req, res) => {});
+    const sprint = await sprintService.updateSprint(req.params.sprintId, req.body)
+    res.status(httpStatus.OK).send(sprint)
+
+});
+
+const deleteSprint = catchAsync(async (req, res) => {
+    const sprint = await sprintService.deleteSprint(req.params.sprintId)
+    res.status(httpStatus.NO_CONTENT).send()
+});
 
 
 module.exports = {

@@ -46,7 +46,6 @@ const deleteRequirement = async (requirementId) => {
 const addRequirmentToModule = async (requirementBody, moduleId, projectId) => {
 
     const reqModule = await Requirements.findOne({'_id': moduleId, 'projectId': projectId})
-    console.log(reqModule)
     reqModule.requirements.push(requirementBody)
     reqModule.save()
     return reqModule

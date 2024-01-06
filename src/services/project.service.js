@@ -247,13 +247,9 @@ const getMemberById = async (project, memberId) => {
 };
 
 const addMember = async (project, member) => {
-        console.log(member)
-		var user = await userService.getUserByEmail(member.email)
-        project.members.push({ userId: user._id, role: member.role });
 
-        console.log(user)
-
-        console.log(project.members)
+    var user = await userService.getUserByEmail(member.email)
+    project.members.push({ userId: user._id, role: member.role });
 
     await project.save();
     return project;
@@ -262,7 +258,6 @@ const addMember = async (project, member) => {
 const deleteMember = async(project, member) => {
 
 	project.members = await project.members.filter((m) => m.userId != member);
-    console.log(project.members, member)
 	project.save()
 	return project.members
 

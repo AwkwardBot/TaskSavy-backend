@@ -1,10 +1,13 @@
 const express = require('express');
-const { ticketTypeController } = require('../../controllers')
+const { ticketTypeController } = require('../../controllers');
 const auth = require('../../middlewares/auth');
 const reqLog = require('../../middlewares/reqLogger');
 const { projectAccess, checkRole } = require('../../middlewares/Access');
 const validate = require('../../middlewares/validate');
-const { projectValidation, ticketTypeValidation } = require('../../validations');
+const {
+    projectValidation,
+    ticketTypeValidation
+} = require('../../validations');
 
 const router = express.Router({ mergeParams: true });
 
@@ -13,16 +16,37 @@ const ADMIN = 'Admin';
 
 router
     .route('/')
-    .post(auth(), validate(ticketTypeValidation.createCustomTicket), projectAccess, checkRole(MANAGER), ticketTypeController.addCustomTicketType)
-    .get(auth(), validate(projectValidation.projectId), projectAccess, reqLog, ticketTypeController.getAllTicketTypes);
+    .post(
+        auth(),
+        validate(ticketTypeValidation.createCustomTicket),
+        projectAccess,
+        checkRole(MANAGER),
+        ticketTypeController.addCustomTicketType
+    )
+    .get(
+        auth(),
+        validate(projectValidation.projectId),
+        projectAccess,
+        ticketTypeController.getAllTicketTypes
+    );
 
 router
     .route('/:ticketTypeId')
-    .delete(auth(), validate(ticketTypeValidation.ticketTypeId), projectAccess, checkRole(MANAGER), ticketTypeController.deleteTicketType)
-    .get(auth(), validate(ticketTypeValidation.ticketTypeId), projectAccess, ticketTypeController.getTicketTypeById)
+    .delete(
+        auth(),
+        validate(ticketTypeValidation.ticketTypeId),
+        projectAccess,
+        checkRole(MANAGER),
+        ticketTypeController.deleteTicketType
+    )
+    .get(
+        auth(),
+        validate(ticketTypeValidation.ticketTypeId),
+        projectAccess,
+        ticketTypeController.getTicketTypeById
+    );
 
-
-module.exports = router
+module.exports = router;
 
 /**
  * @swagger
@@ -92,9 +116,8 @@ module.exports = router
  *         $ref: '#/components/responses/Unauthorized'
  *       "404":
  *         $ref: '#/components/responses/NotFound'
- *     
+ *
  */
-
 
 /**
  * @swagger
@@ -163,5 +186,5 @@ module.exports = router
  *         $ref: '#/components/responses/Unauthorized'
  *       "404":
  *         $ref: '#/components/responses/NotFound'
- * 
+ *
  */

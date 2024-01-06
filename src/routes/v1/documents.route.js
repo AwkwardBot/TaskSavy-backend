@@ -16,7 +16,7 @@ const ADMIN = 'Admin';
 router
     .route('/')
     .post(
-        reqLog,
+    
         auth(),
         validate(projectValidation.projectId),
         projectAccess,

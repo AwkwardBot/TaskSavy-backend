@@ -46,6 +46,10 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/Member'
+        boards:
+          type: array
+          items:
+            $ref: '#components/schemas/Board'
         tags:
           type: array
           items:
@@ -78,6 +82,16 @@ components:
       type: object
       properties:
         name:
+          type: string
+    
+    Board:
+      type: object
+      properties:
+        name: 
+          type: string
+        description: 
+          type: string
+        color: 
           type: string
 
     Sprint:

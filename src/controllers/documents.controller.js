@@ -20,7 +20,7 @@ const readFiles = catchAsync(async (req, res) => {
 
 const deleteFile = catchAsync(async (req,res)=>{
 
-    console.log(req.body.file)
+
 
     await documentsService.deleteFile(req.params.projectId, req.body.file)
     res.status(httpStatus.NO_CONTENT).send()

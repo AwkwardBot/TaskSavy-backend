@@ -20,7 +20,7 @@ const password = (value, helpers) => {
 
 const objectIdArray = (values, helpers) => {
   for(var value of values){
-    console.log(value)
+
     if (value && !value.match(/^[0-9a-fA-F]{24}$/)) {
       console.log("Invalid ID")
       return helpers.message('"{{#label}}" must be a valid mongo id');

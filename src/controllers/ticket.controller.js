@@ -36,7 +36,6 @@ const getTicketById = catchAsync(async (req, res) => {
 
 const updateTicket = catchAsync(async (req, res) => {
 
-    console.log(req.body)
     
     const ticket = await ticketService.updateTicket(req.params.ticketId, req.body)
 

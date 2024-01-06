@@ -50,7 +50,6 @@ const deleteTicketbyId = async (projectId, ticketId) => {
 }
 
 const updateTicket = async (ticketId, ticketBody) => {
-    console.log("Body: ", ticketBody);
     try {
         const ticket = await Ticket.findById(ticketId);
 
@@ -71,8 +70,7 @@ const updateTicket = async (ticketId, ticketBody) => {
             data: updatedTicket
         };
     } catch (e) {
-        console.log("Error Here")
-        console.error(e); // Corrected 'consle' to 'console'
+        console.error(e); 
         return {
             
             success: false,
@@ -91,12 +89,17 @@ const getTicketById = async (ticketId) => {
 const getTicketsBySprint = async (sprintId) => {
 
     const tickets = await Ticket.find({sprint:sprintId })
-
     console.log(tickets)
-
     return tickets
 }
 
+
+const removeSprint = async (sprintId) => {
+    await Ticket.updateMany(
+      { sprint: sprintId },
+      { $unset: { sprint: 1 } } 
+    );
+  };
 
 
 module.exports = {
@@ -105,5 +108,6 @@ module.exports = {
     deleteTicketbyId,
     updateTicket,
     getTicketById,
-    getTicketsBySprint
+    getTicketsBySprint,
+    removeSprint
 };

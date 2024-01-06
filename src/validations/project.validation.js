@@ -15,6 +15,16 @@ const projectId = {
   }).unknown()
 };
 
+
+const ProjectIdBoardId = {
+  params: Joi.object().keys({
+    projectId: Joi.required().custom(objectId),
+    boardId: Joi.required().custom(objectId),
+  }).unknown()
+};
+
+
+
 const updateProject = {
   params: Joi.object().keys({
     projectId: Joi.required().custom(objectId),
@@ -76,4 +86,6 @@ module.exports = {
   updateProject,
   memberId,
   changeMemberRole,
+  ProjectIdBoardId,
+  
 };

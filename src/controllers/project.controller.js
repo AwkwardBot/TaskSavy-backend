@@ -121,10 +121,14 @@ const getBoards = catchAsync(async (req, res) => {
     res.send(boards);
 });
 
+
+
+
+
 const getBoard = catchAsync(async (req, res) => {});
 
 const addBoard = catchAsync(async (req, res) => {
-    console.log(req.params.projectId,"fds" ,req.project, req.body)
+   
     const boards = await projectService.addBoard(req.project, req.body)
     res.status(httpStatus.OK).send(boards)
 });
@@ -132,7 +136,7 @@ const addBoard = catchAsync(async (req, res) => {
 const removeBoard = catchAsync(async (req, res) => {
     await projectService.deleteBoard(
         req.param.projectId,
-        req.body.board
+        
     );
     res.status(httpStatus.NO_CONTENT).send();
 });
@@ -143,6 +147,9 @@ const getMembers = catchAsync(async (req, res) => {
     const members = await projectService.getMembers(req.project)
     res.status(httpStatus.OK).send(members)
 });
+
+
+
 
 const addMembers = catchAsync(async (req, res) => {
 
