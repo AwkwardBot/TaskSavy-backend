@@ -101,8 +101,8 @@ router
     )
     .post(
         auth(),
-        projectAccess,
         validate(projectValidation.projectId),
+        projectAccess,
         projectController.addBoard
     );
 
@@ -238,7 +238,7 @@ module.exports = router;
  *   get:
  *     summary: Get user's projects
  *     tags: [Projects]
- *     descriptions: Only authenticated users can retrieve their projects
+ *     description: Only authenticated users can retrieve their projects
  *     security:
  *       - bearerAuth: []
  *     responses:
@@ -315,7 +315,7 @@ module.exports = router;
  *   get:
  *     summary: Get a projects
  *     tags: [Projects]
- *     descriptions: Only authenticated users can fetch their project
+ *     description: Only authenticated users can fetch their project
  *     security:
  *       - bearerAuth: []
  *     parameters:

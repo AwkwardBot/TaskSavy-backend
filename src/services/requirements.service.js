@@ -1,47 +1,105 @@
+const httpStatus = require('http-status');
 const {Requirements} = require('../models');
 const ApiError = require('../utils/ApiError');
-// Create a new requirement
+
+
 const createRequirement = async (reqBody) => {
-    try {
-        const newRequirement = await Requirements.create(reqBody);
-        return newRequirement;
-    } catch (err) {
-        throw new Error(err.message);
-    }
+
+    const newRequirement = await Requirements.create(reqBody);
+    return newRequirement;
+
 };
 
-// Get requirements by projectId
+
 const getRequirementsByProjectId = async (projectId) => {
-    try {
-        const requirements = await Requirements.find({ projectId });
-        return requirements;
-    } catch (err) {
-        throw new Error(err.message);
-    }
+
+    const requirements = await Requirements.find({ projectId });
+    return requirements;
+
 };
 
-// Update a requirement
-const updateRequirement = async (requirementId, updatedRequirement) => {
-    try {
-        const requirement = await Requirements.findByIdAndUpdate(
-            requirementId,
-            { $set: updatedRequirement },
-            { new: true }
-        );
-        return requirement;
-    } catch (err) {
-        throw new Error(err.message);
-    }
+const getModuleByID = async (projectId, moduleId) => {
+    const reqModule = await Requirements.findOne({ projectId: projectId, _id: moduleId });
+
+    if(!reqModule)
+        throw new ApiError(httpStatus.NOT_FOUND, "Module does not exist")
+
+    return reqModule;
 };
 
-// Delete a requirement
-const deleteRequirement = async (requirementId) => {
-    try {
-        await Requirements.findByIdAndRemove(requirementId);
-    } catch (err) {
-        throw new Error(err.message);
-    }
+const getRequirementById = async (projectId, moduleId, reqId) => {
+
+    console.log(projectId, moduleId, reqId)
+
+        const req = await Requirements.findOne(
+            {
+                '_id': moduleId,
+                'projectId': projectId,
+                'requirements._id': reqId
+            },
+            {
+                'requirements.$': 1
+            }
+
+        )
+
+        console.log(req)
+
+        if(!req)
+            throw new ApiError(httpStatus.NOT_FOUND, "Requirement does not exist")
+        
+        return req;
+
 };
+
+
+const updateRequirement = async (projectId, moduleId, reqId, updateBody) => {
+    const req = await Requirements.findOneAndUpdate(
+        {
+            'projectId': projectId,
+            'requirements._id': reqId,
+            '_id': moduleId
+        },
+        {
+            $set: {
+                'requirements.$.requirement': updateBody.requirement,
+                'requirements.$.class': updateBody.class,
+                'requirements.$.type': updateBody.type
+            }
+        },
+        { new: true }
+    );
+
+    if (!req)
+        throw new ApiError(httpStatus.NOT_FOUND, "Requirement not found")
+
+    return req;
+
+};
+
+
+const deleteRequirement = async (projectId, moduleId, reqId) => {
+    const req = await Requirements.findOneAndUpdate(
+        {
+            '_id': moduleId,
+            'projectId': projectId,
+            'requirements._id': reqId
+            
+        },
+        {
+            $pull: {
+                requirements: { _id: reqId }
+            }
+        },
+        { new: true }
+    );
+
+    if (!req)
+        throw new ApiError(httpStatus.NOT_FOUND, "Requirement not found");
+
+    return req;
+};
+
 
 const addRequirmentToModule = async (requirementBody, moduleId, projectId) => {
 
@@ -54,12 +112,6 @@ const addRequirmentToModule = async (requirementBody, moduleId, projectId) => {
 }
 
 
-const getRequirementsModuleById = async(moduleId) => {
-
-}
-
-
-
 
 
 module.exports = {
@@ -67,5 +119,6 @@ module.exports = {
     getRequirementsByProjectId,
     updateRequirement,
     deleteRequirement,
-    addRequirmentToModule
+    addRequirmentToModule,
+    getRequirementById
 };
