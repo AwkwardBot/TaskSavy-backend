@@ -3,7 +3,6 @@ const { User } = require('../models');
 const ApiError = require('../utils/ApiError');
 const sendbirdService = require('./sendbird.service');
 
-
 /**
  * Create a user
  * @param {Object} userBody
@@ -14,17 +13,13 @@ const createUser = async (userBody) => {
         throw new ApiError(httpStatus.BAD_REQUEST, 'Email already taken');
     }
 
-    const user = await User.create(userBody)
-    const sbResponse = await sendbirdService.createUser(user)
+    const user = await User.create(userBody);
+    const sbResponse = await sendbirdService.createUser(user);
 
     if (sbResponse.error) {
-
-        deleteUserById(user._id)
-        throw new ApiError(httpStatus.BAD_REQUEST, sbResponse.message)
-
+        deleteUserById(user._id);
+        throw new ApiError(httpStatus.BAD_REQUEST, sbResponse.message);
     }
-
-
 
     return user;
 };
@@ -49,7 +44,7 @@ const queryUsers = async (filter, options) => {
  * @returns {Promise<User>}
  */
 const getUserById = async (id) => {
-    return await User.findById(id)
+    return await User.findById(id);
 };
 
 /**
@@ -69,7 +64,6 @@ const getUserByEmail = async (email) => {
  */
 
 const updateUserById = async (userId, updateBody) => {
-
     const user = await getUserById(userId);
 
     if (!user) {

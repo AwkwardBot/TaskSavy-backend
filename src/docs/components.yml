@@ -154,7 +154,7 @@ components:
           $ref: '#/components/schemas/TicketType'
 
 
-    Requirement:
+    Requirements:
       type: object
       properties:
         projectId:
@@ -166,18 +166,21 @@ components:
         requirements:
           type: array
           items:
-            type: object
-            properties:
-              requirement:
-                type: string
-                description: The description of the requirement
-              class:
-                type: string
-                description: The class/category of the requirement
-              type:
-                type: string
-                enum: [functional, non-functional]
-                description: The type of requirement (functional or non-functional)
+            $ref: '#/components/schemas/Requirement'
+    
+    Requirement:
+      type: object
+      properties:
+        requirement:
+          type: string
+          description: The description of the requirement
+        class:
+          type: string
+          description: The class/category of the requirement
+        type:
+          type: string
+          enum: [functional, non-functional]
+          description: The type of requirement (functional or non-functional)
 
     Workspace:
       type: object
