@@ -4,6 +4,7 @@ const ApiError = require('../utils/ApiError');
 const catchAsync = require('../utils/catchAsync');
 const { ticketService } = require('../services');
 
+
 const createTicket = catchAsync(async (req, res) => {
     
     const ticket = await ticketService.createTicket(req.params.projectId, req.body)
@@ -36,6 +37,8 @@ const getTicketById = catchAsync(async (req, res) => {
 
 const updateTicket = catchAsync(async (req, res) => {
 
+    console.log("--_>", req.body)
+
     
     const ticket = await ticketService.updateTicket(req.params.ticketId, req.body)
 
@@ -56,6 +59,15 @@ const assignTicket = catchAsync(async (req, res) => {});
 
 const removeTicketAssignee = catchAsync(async (req, res) => {});
 
+
+const deleteTicket = catchAsync(async (req, res) => {
+
+    const {projectId, ticketId} = req.params;
+    await ticketService.deleteTicketbyId(projectId,ticketId);
+    res.status(httpStatus.NO_CONTENT).send();
+
+});
+
 module.exports = {
     createTicket,
     getTickets,
@@ -65,5 +77,6 @@ module.exports = {
     assignTicket,
     changeTicketStatus,
     getTicketAssignees,
-    removeTicketAssignee
+    removeTicketAssignee,
+    deleteTicket
 };

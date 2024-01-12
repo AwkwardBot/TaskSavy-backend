@@ -36,10 +36,18 @@ const ticketBody = {
     .unknown(true)
 };
 
+const ticketId = {
+    params: Joi.object().keys({
+        projectId: Joi.required().custom(objectId),
+        ticketId: Joi.required().custom(objectId),
+    })
+}
+
 
 module.exports = {
     createTicket,
-    ticketBody
+    ticketBody,
+    ticketId
     
 
 }

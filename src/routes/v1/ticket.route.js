@@ -17,9 +17,8 @@ router
 router
     .route('/:ticketId')
     .get(auth(), projectAccess, ticketController.getTicketById)
-    .delete()
-    .patch(auth(), validate(ticketValidation.ticketBody), projectAccess, ticketController.updateTicket)
-
+    .patch(auth(), projectAccess, ticketController.updateTicket)
+    .delete(auth(), validate(ticketValidation.ticketId), projectAccess, ticketController.deleteTicket)
 
 router
     .route('/sprint/:sprintId')
@@ -162,6 +161,39 @@ module.exports = router
  *     responses:
  *       '200':
  *         description: OK
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/TicketsArray'
+ *       '400':
+ *         description: Bad Request
+ *       '401':
+ *         $ref: '#/components/responses/Unauthorized'
+ *       "404":
+ *         $ref: '#/components/responses/NotFound'
+ * 
+ *   delete:
+ *     summary: Delete a ticket
+ *     description: Only authenticated users can delete a ticket
+ *     tags: [Ticket]
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - name: projectId
+ *         in: path
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: Project id
+ *       - name: ticketId
+ *         in: path
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: Ticket id
+ *     responses:
+ *       '204':
+ *         description: Deleted Successfully
  *         content:
  *           application/json:
  *             schema:

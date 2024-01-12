@@ -9,6 +9,7 @@ const ticketRoutes = require('./ticket.route')
 const ticketTypeRoutes = require('./ticketType.route')
 const requirementsRoutes = require('./requirements.route')
 const documentsRoute = require('./documents.route')
+const linkedTicketRoute = require('./linkedTicket.route')
 
 const config = require('../../config/config');
 
@@ -51,6 +52,11 @@ const defaultRoutes = [
   {
     path: '/projects/:projectId/documents',
     route: documentsRoute
+  },
+
+  {
+    path: '/projects/:projectId/link',
+    route: linkedTicketRoute
   }
   
 
