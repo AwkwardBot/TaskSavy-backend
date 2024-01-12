@@ -34,22 +34,15 @@ const getTickets = async (projectId) => {
 };
 
 const deleteTicketbyId = async (projectId, ticketId) => {
-    try {
-        await Ticket.deleteOne(ticketId)
-        return {
-            success: true
-        }
-    }
-    catch(e) {
-        consle.log(e)
-        return {
-            success: false,
-            message: e.message
-        }
-    }
-}
+    
+    const ticket = await getTicketById(ticketId)
+    await Ticket.deleteOne(ticket)
+
+};
 
 const updateTicket = async (ticketId, ticketBody) => {
+
+
     try {
         const ticket = await Ticket.findById(ticketId);
 
@@ -60,8 +53,17 @@ const updateTicket = async (ticketId, ticketBody) => {
             };
         }
 
-        Object.assign(ticket, ticketBody);
+        console.log(ticketBody.sprint)
 
+        if (!ticketBody.sprint) {
+            delete ticket.sprint;
+            delete ticketBody.sprint;
+        }
+
+        console.log("-->", ticket)
+
+        Object.assign(ticket, ticketBody);
+        
         const updatedTicket = await ticket.save();
 
         console.log("Updated", updatedTicket);
@@ -89,7 +91,6 @@ const getTicketById = async (ticketId) => {
 const getTicketsBySprint = async (sprintId) => {
 
     const tickets = await Ticket.find({sprint:sprintId })
-    console.log(tickets)
     return tickets
 }
 

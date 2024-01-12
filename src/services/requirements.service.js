@@ -43,7 +43,7 @@ const getRequirementById = async (projectId, moduleId, reqId) => {
 
         )
 
-        console.log(req)
+        
 
         if(!req)
             throw new ApiError(httpStatus.NOT_FOUND, "Requirement does not exist")
@@ -54,7 +54,7 @@ const getRequirementById = async (projectId, moduleId, reqId) => {
 
 
 const updateRequirement = async (projectId, moduleId, reqId, updateBody) => {
-    const req = await Requirements.findOneAndUpdate(
+    await Requirements.findOneAndUpdate(
         {
             'projectId': projectId,
             'requirements._id': reqId,
@@ -65,10 +65,17 @@ const updateRequirement = async (projectId, moduleId, reqId, updateBody) => {
                 'requirements.$.requirement': updateBody.requirement,
                 'requirements.$.class': updateBody.class,
                 'requirements.$.type': updateBody.type
-            }
+            },
+        
+            
         },
-        { new: true }
+        
     );
+
+    const req = await getRequirementById(projectId, moduleId, reqId)
+
+
+    console.log("---------->>>>",req)
 
     if (!req)
         throw new ApiError(httpStatus.NOT_FOUND, "Requirement not found")
@@ -91,8 +98,12 @@ const deleteRequirement = async (projectId, moduleId, reqId) => {
                 requirements: { _id: reqId }
             }
         },
-        { new: true }
+        { 
+            new: true, 
+           
+        }
     );
+
 
     if (!req)
         throw new ApiError(httpStatus.NOT_FOUND, "Requirement not found");
@@ -108,10 +119,7 @@ const addRequirmentToModule = async (requirementBody, moduleId, projectId) => {
     reqModule.save()
     return reqModule
     
-
 }
-
-
 
 
 module.exports = {

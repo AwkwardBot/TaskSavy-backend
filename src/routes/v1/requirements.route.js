@@ -220,6 +220,50 @@ router.get('/:moduleId/:reqId',auth(), validate(projectValidation.projectId), pr
 
 
 
+/**
+ * @swagger
+ * /projects/{projectId}/requirements/{moduleId}/{reqId}:
+ *   patch:
+ *     summary: Add Requirement to a module
+ *     tags: [Requirements]
+ *     descriptions: Only authorized users can fetch the Requirement
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: projectId
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: The ID of the project
+ *       - in: path
+ *         name: moduleId
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: The ID of the Module
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             $ref: '#/components/schemas/Requirement'
+ *     responses:
+ *       '200':
+ *         description: OK
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/Requirement'
+ *       '401':
+ *         $ref: '#/components/responses/Unauthorized'
+ *       "403":
+ *         $ref: '#/components/responses/Forbidden'
+ *       "404":
+ *         $ref: '#/components/responses/NotFound'
+ */
+
+
 
 
 router
