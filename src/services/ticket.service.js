@@ -17,13 +17,13 @@ const createTicket = async (projectId, ticketBody) => {
     }
 
     
-    const ticketres = await Ticket.create(ticketBody);
+    const ticketRes = await Ticket.create(ticketBody);
     
-    if (!ticketres) {
+    if (!ticketRes) {
         throw new ApiError(httpStatus.BAD_REQUEST, 'Error Generating Ticket');
     }
 
-    return ticketres;
+    return ticketRes;
 };
 
 const getTickets = async (projectId) => {
@@ -41,10 +41,8 @@ const deleteTicketbyId = async (projectId, ticketId) => {
 };
 
 const updateTicket = async (ticketId, ticketBody) => {
-
-
     try {
-        const ticket = await Ticket.findById(ticketId);
+        var ticket = await Ticket.findById(ticketId);
 
         if (!ticket) {
             return {
@@ -53,20 +51,21 @@ const updateTicket = async (ticketId, ticketBody) => {
             };
         }
 
-        console.log(ticketBody.sprint)
-
         if (!ticketBody.sprint) {
-            delete ticket.sprint;
-            delete ticketBody.sprint;
+            console.log("Deleting Ticket");
+            ticket.sprint = undefined;
+            ticketBody.sprint = undefined;
+            console.log("After Delete: ", ticket)
         }
 
-        console.log("-->", ticket)
+        console.log("Ticket Update Body:", ticketBody);
 
         Object.assign(ticket, ticketBody);
+
+        console.log("Updated Ticket:", ticket);
         
         const updatedTicket = await ticket.save();
 
-        console.log("Updated", updatedTicket);
         return {
             success: true,
             data: updatedTicket
@@ -74,12 +73,12 @@ const updateTicket = async (ticketId, ticketBody) => {
     } catch (e) {
         console.error(e); 
         return {
-            
             success: false,
             message: e.message,
         };
     }
 };
+
 
 const getTicketById = async (ticketId) => {
     const ticket = await Ticket.findById(ticketId)
@@ -103,6 +102,17 @@ const removeSprint = async (sprintId) => {
   };
 
 
+const setDefaultStatus = async (projectId, statusToRemove) => {
+
+    await Ticket.updateMany(
+        {   projectId: projectId,
+            status: statusToRemove,  },
+        { $set: { status: "Pending" } } 
+      );
+
+}
+
+
 module.exports = {
     createTicket,
     getTickets,
@@ -110,5 +120,6 @@ module.exports = {
     updateTicket,
     getTicketById,
     getTicketsBySprint,
-    removeSprint
+    removeSprint,
+    setDefaultStatus
 };

@@ -3,7 +3,7 @@ const { Project } = require('../models');
 const ApiError = require('../utils/ApiError');
 const userService = require('./user.service');
 const ticketTypeService = require('./ticketType.service');
-
+const ticketService = require('./ticket.service');
 
 /**
  * Create a new Project
@@ -18,10 +18,10 @@ const createProject = async (projectBody, userId) => {
             role: 'Admin'
         }
     ];
-
+w
     const project = await Project.create(projectBody);
-    await ticketTypeService.createTicketType(project.id)
-    return project
+    await ticketTypeService.createTicketType(project.id);
+    return project;
 };
 
 /**
@@ -37,25 +37,18 @@ const getProjects = async (userId) => {
 };
 
 const updateProjectById = async (project, body) => {
-    
     Object.assign(project, body);
-    
-    console.log(project, body)
-    project.save()
+    project.save();
     return project;
-
 };
 
 const deleteProject = async (projectId) => {
+    const project = await Project.findByIdAndDelete(projectId);
+    if (!project) {
+        return false;
+    }
 
-	const project = await Project.findByIdAndDelete(projectId);
-	if (!project) {
-		return false
-	}
-
-	return true
-
-
+    return true;
 };
 
 /**
@@ -155,118 +148,118 @@ const updateTag = async (project, tagUpdate) => {
     return tag;
 };
 
-
 // Boards
 
 /**
- * 
- * @param {project} project 
+ *
+ * @param {project} project
  * @returns {Promise<boards>}
  */
 
 const getBoards = async (project) => {
-    return project.boards
-}
+    return project.boards;
+};
 
 const getBoard = async (project, boardId) => {
-
     const board = project.boards.find((b) => b.id === boardId);
-    return board
+    return board;
+};
 
-}
-
-const reorderBoard = async(project, orderedBoard) => {
-    
-}
+const reorderBoard = async (project, orderedBoard) => {};
 
 const addBoard = async (project, boardBody) => {
     const count = project.boards.length;
-    boardBody.order = count+1;
+    boardBody.order = count + 1;
     project.boards.push(boardBody);
 
     await project.save();
     return project.boards;
-}
- 
+};
+
 const updateBoards = async (project, updateBody) => {
-    const board = await getBoard(project, updateBody._id)
-    board = updateBody
-    project.save()
-    return project.boards
-} 
+    const board = await getBoard(project, updateBody._id);
+    board = updateBody;
+    project.save();
+    return project.boards;
+};
 
 const deleteBoard = async (project, boardId) => {
-    project.boards = project.boards.filter((b) => b._id !== boardId);
-    await project.save();
-    return project.boards;
-}
+    const board = project.boards.find((b) => b._id == boardId);
 
+    if (board.name == 'Pending' || board.name == 'Completed')
+        throw new ApiError(httpStatus.FORBIDDEN, 'Column cannot be deleted')
+    
+
+
+    
+    var project = await Project.findOneAndUpdate({_id: project._id},{ $pull: { boards: { _id: boardId } }}, {new: true});
+
+
+    if(!project) {
+        throw new ApiError(httpStatus.NOT_FOUND, 'Column does not exist');
+    }
+
+    await ticketService.setDefaultStatus(project._id, board.name)
+
+    return project.boards;
+};
 
 const getMembers = async (project) => {
     return project.members;
 };
 
 const getMembersDetail = async (project) => {
-	
-	var memberDetails = []
+    var memberDetails = [];
 
+    for (var member of project.members) {
+        var detailuser = await userService.getUserById(member.userId);
 
-	for (var member of project.members) {
-
-		var detailuser = await userService.getUserById(member.userId)
-        
-		var user = {
+        var user = {
             _id: detailuser._id,
-			email: detailuser.email,
-			name: detailuser.name,
-			role: member.role
-		}
-		memberDetails.push(user)
-	}
+            email: detailuser.email,
+            name: detailuser.name,
+            role: member.role
+        };
+        memberDetails.push(user);
+    }
 
-
-	return memberDetails
-
-}
+    return memberDetails;
+};
 
 const getMemberDetail = async (project, memberId) => {
-		
-	var userDetail = userService.getUserById(member.userId)
-	if (!userDetail)
-		throw new ApiError(httpStatus.NOT_FOUND, "Member with provide id does not exist")
-	var user = {
-		id: memberId,
-		email: userDetail.email,
-		name: userDetail.name,
-		role: project.members.filter((m)=> m.userId == memberId).role
-	}
+    var userDetail = userService.getUserById(member.userId);
+    if (!userDetail)
+        throw new ApiError(
+            httpStatus.NOT_FOUND,
+            'Member with provide id does not exist'
+        );
+    var user = {
+        id: memberId,
+        email: userDetail.email,
+        name: userDetail.name,
+        role: project.members.filter((m) => m.userId == memberId).role
+    };
 
-	return user
-
-}
-
+    return user;
+};
 
 const getMemberById = async (project, memberId) => {
     return project.members.find((m) => m.id === memberId);
 };
 
 const addMember = async (project, member) => {
-
-    var user = await userService.getUserByEmail(member.email)
+    var user = await userService.getUserByEmail(member.email);
     project.members.push({ userId: user._id, role: member.role });
 
     await project.save();
     return project;
 };
 
-const deleteMember = async(project, member) => {
-
-	project.members = await project.members.filter((m) => m.userId != member);
-	project.save()
-	return project.members
-
-}
-
+const deleteMember = async (project, member) => {
+    project.members = await project.members.filter((m) => m.userId != member);
+    project.save();
+    return project.members;
+};
 
 const searchMemberByName = async (project, name) => {
     return project.members.find((m) => m.name === name);
@@ -277,13 +270,10 @@ const queryProject = async () => {
     return projects;
 };
 
-
-
-
 module.exports = {
     createProject,
     getProjects,
-	deleteProject,
+    deleteProject,
     changeActiveStatus,
     changeStatus,
     getTags,
@@ -295,15 +285,13 @@ module.exports = {
     getMemberById,
     addMember,
     updateProjectById,
-	getMembersDetail,
-	getMemberDetail,
-	deleteMember,
+    getMembersDetail,
+    getMemberDetail,
+    deleteMember,
 
     getBoards,
     getBoard,
     addBoard,
     updateBoards,
     deleteBoard
-
-
 };

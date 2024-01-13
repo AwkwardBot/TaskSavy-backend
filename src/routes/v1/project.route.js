@@ -111,11 +111,14 @@ router
     .get(
         auth(),
         validate(projectValidation.ProjectIdBoardId),
+        projectAccess,
         projectController.getBoard
     )
     .delete(
         auth(),
         validate(projectValidation.projectId),
+        projectAccess,
+        checkRole(MANAGER),
         projectController.removeBoard
     )
     .patch(

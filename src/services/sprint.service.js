@@ -1,7 +1,7 @@
 const httpStatus = require('http-status');
 const { Sprint } = require('../models');
 const ApiError = require('../utils/ApiError');
-const ticketService = require('./ticket.sevice');
+const ticketService = require('./ticket.service');
 
 /**
  * Create a new Sprint

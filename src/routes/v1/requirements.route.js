@@ -1,5 +1,5 @@
 const express = require('express');
-const {requirementsController} = require('../../controllers');
+const { requirementsController } = require('../../controllers');
 const { sprintValidation, projectValidation } = require('../../validations');
 const { projectAccess, checkRole } = require('../../middlewares/Access');
 const validate = require('../../middlewares/validate');
@@ -25,7 +25,7 @@ const ADMIN = 'Admin';
  *     tags: [Requirements]
  *     description: Only authorized users can create requirements module
  *     security:
- *       - bearerAuth: [] 
+ *       - bearerAuth: []
  *     parameters:
  *       - in: path
  *         name: projectId
@@ -38,7 +38,11 @@ const ADMIN = 'Admin';
  *       content:
  *         application/json:
  *           schema:
- *             $ref: '#/components/schemas/Requirements'
+ *             type: object
+ *             properties:
+ *               module_name:
+ *                  type: string
+ *                  description: The name of the module
  *     responses:
  *       '201':
  *         description: Created
@@ -53,7 +57,13 @@ const ADMIN = 'Admin';
  *       "404":
  *         $ref: '#/components/responses/NotFound'
  */
-router.post('/', auth(), validate(projectValidation.projectId), projectAccess,  requirementsController.createRequirement);
+router.post(
+    '/',
+    auth(),
+    validate(projectValidation.projectId),
+    projectAccess,
+    requirementsController.createRequirement
+);
 
 /**
  * @swagger
@@ -63,7 +73,7 @@ router.post('/', auth(), validate(projectValidation.projectId), projectAccess,  
  *     tags: [Requirements]
  *     description: Only authorized users can fetch requirements
  *     security:
- *       - bearerAuth: [] 
+ *       - bearerAuth: []
  *     parameters:
  *       - in: path
  *         name: projectId
@@ -81,7 +91,13 @@ router.post('/', auth(), validate(projectValidation.projectId), projectAccess,  
  *       '500':
  *         description: Server error
  */
-router.get('/', auth(), validate(projectValidation.projectId), projectAccess,requirementsController.getRequirementsByProjectId);
+router.get(
+    '/',
+    auth(),
+    validate(projectValidation.projectId),
+    projectAccess,
+    requirementsController.getRequirementsByProjectId
+);
 
 /**
  * @swagger
@@ -131,7 +147,13 @@ router.get('/', auth(), validate(projectValidation.projectId), projectAccess,req
  *       "404":
  *         $ref: '#/components/responses/NotFound'
  */
-router.put('/:moduleId/:reqId', auth(), validate(projectValidation.projectId), projectAccess, requirementsController.updateRequirement);
+router.put(
+    '/:moduleId/:reqId',
+    auth(),
+    validate(projectValidation.projectId),
+    projectAccess,
+    requirementsController.updateRequirement
+);
 
 /**
  * @swagger
@@ -171,7 +193,14 @@ router.put('/:moduleId/:reqId', auth(), validate(projectValidation.projectId), p
  *       "404":
  *         $ref: '#/components/responses/NotFound'
  */
-router.delete('/:moduleId/:reqId', auth(), validate(projectValidation.projectId), projectAccess, checkRole(MANAGER),  requirementsController.deleteRequirement);
+router.delete(
+    '/:moduleId/:reqId',
+    auth(),
+    validate(projectValidation.projectId),
+    projectAccess,
+    checkRole(MANAGER),
+    requirementsController.deleteRequirement
+);
 
 /**
  * @swagger
@@ -216,13 +245,50 @@ router.delete('/:moduleId/:reqId', auth(), validate(projectValidation.projectId)
  *         $ref: '#/components/responses/NotFound'
  */
 
-router.get('/:moduleId/:reqId',auth(), validate(projectValidation.projectId), projectAccess,  requirementsController.getRequirement);
-
-
+router.get(
+    '/:moduleId/:reqId',
+    auth(),
+    validate(projectValidation.projectId),
+    projectAccess,
+    requirementsController.getRequirement
+);
 
 /**
  * @swagger
- * /projects/{projectId}/requirements/{moduleId}/{reqId}:
+ * /projects/{projectId}/requirements/{moduleId}:
+ *   get:
+ *     summary: Get Requirement Module
+ *     tags: [Requirements]
+ *     descriptions: Only authorized users can fetch the Requirement Module
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: projectId
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: The ID of the project
+ *       - in: path
+ *         name: moduleId
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: The ID of the Module
+ *     responses:
+ *       '200':
+ *         description: OK
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/Requirement'
+ *       '401':
+ *         $ref: '#/components/responses/Unauthorized'
+ *       "403":
+ *         $ref: '#/components/responses/Forbidden'
+ *       "404":
+ *         $ref: '#/components/responses/NotFound'
+ * 
  *   patch:
  *     summary: Add Requirement to a module
  *     tags: [Requirements]
@@ -261,18 +327,106 @@ router.get('/:moduleId/:reqId',auth(), validate(projectValidation.projectId), pr
  *         $ref: '#/components/responses/Forbidden'
  *       "404":
  *         $ref: '#/components/responses/NotFound'
+ * 
+ *   put:
+ *     summary: Edit Requirement Module
+ *     tags: [Requirements]
+ *     descriptions: Only authorized users can fetch the Requirement
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: projectId
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: The ID of the project
+ *       - in: path
+ *         name: moduleId
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: The ID of the Module
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               module_name:
+ *                  type: string
+ *                  description: The name of the module
+ *     responses:
+ *       '200':
+ *         description: OK
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/Requirement'
+ *       '401':
+ *         $ref: '#/components/responses/Unauthorized'
+ *       "403":
+ *         $ref: '#/components/responses/Forbidden'
+ *       "404":
+ *         $ref: '#/components/responses/NotFound'
+ * 
+ *   delete:
+ *     summary: Delete Requirement Module
+ *     tags: [Requirements]
+ *     descriptions: Only authorized users can fetch the Requirement
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: projectId
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: The ID of the project
+ *       - in: path
+ *         name: moduleId
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: The ID of the Module
+ *     responses:
+ *       '204':
+ *         description: Deleted Successfully
+ *       '401':
+ *         $ref: '#/components/responses/Unauthorized'
+ *       "403":
+ *         $ref: '#/components/responses/Forbidden'
+ *       "404":
+ *         $ref: '#/components/responses/NotFound'
  */
-
-
-
 
 router
     .route('/:moduleId')
+    .get(
+        auth(),
+        validate(projectValidation.projectId),
+        projectAccess,
+        requirementsController.getModule
+    )
+    .put(
+        auth(),
+        validate(projectValidation.projectId),
+        projectAccess,
+        checkRole(MANAGER),
+        requirementsController.updateModule
+    )
     .patch(
         auth(),
         validate(projectValidation.projectId),
         projectAccess,
-        requirementsController.addRequirmentToModule)
-
+        requirementsController.addRequirementToModule
+    )
+    .delete(
+        auth(),
+        validate(projectValidation.projectId),
+        projectAccess,
+        requirementsController.deleteModule
+    );
 
 module.exports = router;
