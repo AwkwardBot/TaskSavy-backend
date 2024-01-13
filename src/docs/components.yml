@@ -157,16 +157,23 @@ components:
     Requirements:
       type: object
       properties:
+        $ref: '#/components/schemas/ReqModule'
+        
+        requirements:
+          type: array
+          items:
+            $ref: '#/components/schemas/Requirement'
+
+    ReqModule: 
+      type: object
+      properties:
         projectId:
           type: string
           description: The ID of the project associated with the requirement
         module_name:
           type: string
           description: The name of the module
-        requirements:
-          type: array
-          items:
-            $ref: '#/components/schemas/Requirement'
+
     
     Requirement:
       type: object

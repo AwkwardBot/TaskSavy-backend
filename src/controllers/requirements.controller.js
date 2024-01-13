@@ -45,13 +45,12 @@ exports.deleteRequirement = catchAsync(async (req, res) => {
 
 });
 
-exports.addRequirmentToModule = catchAsync(async(req, res)=> {
+exports.addRequirementToModule = catchAsync(async(req, res)=> {
 
-    const projectId = req.params.projectId;
-    const moduleId = req.params.moduleId;
+    const {projectId, moduleId} = req.params
     const requirementBody = req.body
 
-    const reqModule = await requirementsService.addRequirmentToModule(requirementBody, moduleId, projectId)
+    const reqModule = await requirementsService.addRequirementToModule(projectId, moduleId, requirementBody)
 
     res.status(httpStatus.OK).send(reqModule)
 
@@ -60,16 +59,36 @@ exports.addRequirmentToModule = catchAsync(async(req, res)=> {
 
 exports.getRequirement = catchAsync(async(req, res)=> {
 
-    const projectId = req.params.projectId;
-    const moduleId = req.params.moduleId;
-    const reqId = req.params.reqId;
-
+    const {projectId, moduleId, reqId} = req.params
     const requirement =  await requirementsService.getRequirementById(projectId, moduleId, reqId)
-
-    
-
     res.status(httpStatus.OK).send(requirement)
 
+})
+
+
+exports.updateModule = catchAsync(async(req, res)=> {
+
+    const {projectId, moduleId} = req.params;
+    const updatedModule = await requirementsService.updateModuleById(projectId, moduleId, req.body)
+    res.status(httpStatus.NO_CONTENT).send()
+
+})
+
+
+exports.deleteModule = catchAsync(async(req, res) => {
+
+    const {projectId, moduleId} = req.params;
+    await requirementsService.deleteModuleById(projectId, moduleId)
+    res.status(httpStatus.NO_CONTENT).send()
+
+})
+
+
+exports.getModule = catchAsync(async (req, res) => {
+     
+    const {projectId, moduleId} = req.params;
+    const reqModule = await requirementsService.getModuleById(projectId, moduleId)
+    res.status(httpStatus.OK).send(reqModule)
 })
 
 

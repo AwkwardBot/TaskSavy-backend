@@ -135,7 +135,8 @@ const addBoard = catchAsync(async (req, res) => {
 
 const removeBoard = catchAsync(async (req, res) => {
     await projectService.deleteBoard(
-        req.param.projectId,
+        req.project,
+        req.params.boardId
         
     );
     res.status(httpStatus.NO_CONTENT).send();
