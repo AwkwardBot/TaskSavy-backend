@@ -429,4 +429,45 @@ router
         requirementsController.deleteModule
     );
 
+
+/**
+ * @swagger
+ * /projects/{projectId}/requirements/checkReq:
+ *   post:
+ *     summary: Check Requirement Ambiguity
+ *     tags: [Requirements]
+ *     descriptions: Enter Requirement to check the ambiguity
+ *     parameters:
+ *       - in: path
+ *         name: projectId
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: The ID of the project
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               requirement: 
+ *                 type: string
+ *                 description: System Requirement
+ *     responses:
+ *       '200':
+ *         description: OK
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *               
+ *  
+ */
+
+router
+    .route('/checkReq')
+    .post(requirementsController.checkReq)
+
 module.exports = router;
