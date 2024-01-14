@@ -1,6 +1,7 @@
 const httpStatus = require('http-status');
 const { Requirements } = require('../models');
 const ApiError = require('../utils/ApiError');
+const { default: axios } = require('axios');
 
 const createRequirement = async (reqBody) => {
     const newRequirement = await Requirements.create(reqBody);
@@ -82,7 +83,12 @@ const deleteRequirement = async (projectId, moduleId, reqId) => {
         }
     );
 
+    
+
+
     if (!req) throw new ApiError(httpStatus.NOT_FOUND, 'Requirement not found');
+
+    
 
     return req;
 };
@@ -92,7 +98,7 @@ const addRequirementToModule = async (projectId, moduleId, requirementBody) => {
         _id: moduleId,
         projectId: projectId
     });
-    if (!reqModule) throw new ApiError(httpStatus.NOT_FOUND, 'Module not Foun');
+    if (!reqModule) throw new ApiError(httpStatus.NOT_FOUND, 'Module not Found');
     reqModule.requirements.push(requirementBody);
     reqModule.save();
     return reqModule;
@@ -103,18 +109,18 @@ const updateModuleById = async (projectId, moduleId, updateBody) => {
         _id: moduleId,
         projectId: projectId
     });
-    if (!reqModule) throw new ApiError(httpStatus.NOT_FOUND, 'Module not Foun');
+    if (!reqModule) throw new ApiError(httpStatus.NOT_FOUND, 'Module not Found');
     Object.assign(reqModule, updateBody);
     reqModule.save();
     return reqModule;
-};
+    };
 
 const deleteModuleById = async (projectId, moduleId) => {
     const reqModule = await Requirements.findOne({
         _id: moduleId,
         projectId: projectId
     });
-    if (!reqModule) throw new ApiError(httpStatus.NOT_FOUND, 'Module not Foun');
+    if (!reqModule) throw new ApiError(httpStatus.NOT_FOUND, 'Module not Found');
 
     await reqModule.remove();
     return reqModule;
@@ -125,10 +131,20 @@ const getModuleById = async (projectId, moduleId) => {
         _id: moduleId,
         projectId: projectId
     });
-    if (!reqModule) throw new ApiError(httpStatus.NOT_FOUND, 'Module not Foun');
+    if (!reqModule) throw new ApiError(httpStatus.NOT_FOUND, 'Module not Found');
 
     return reqModule;
 };
+
+
+const checkReq = async (requirement) => {
+    console.log(requirement)
+    var body = {"text": requirement}
+    const resp = await axios.post("http://summary.tasksavy.site/analyze_fr", body)
+    console.log(resp.data)
+    return resp.data
+
+}
 
 module.exports = {
     createRequirement,
@@ -139,5 +155,6 @@ module.exports = {
     getRequirementById,
     updateModuleById,
     deleteModuleById,
-    getModuleById
+    getModuleById,
+    checkReq
 };
