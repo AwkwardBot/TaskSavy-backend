@@ -98,6 +98,9 @@ const addRequirementToModule = async (projectId, moduleId, requirementBody) => {
         _id: moduleId,
         projectId: projectId
     });
+
+
+    
     if (!reqModule) throw new ApiError(httpStatus.NOT_FOUND, 'Module not Found');
     reqModule.requirements.push(requirementBody);
     reqModule.save();
@@ -138,10 +141,8 @@ const getModuleById = async (projectId, moduleId) => {
 
 
 const checkReq = async (requirement) => {
-    console.log(requirement)
     var body = {"text": requirement}
     const resp = await axios.post("http://summary.tasksavy.site/analyze_fr", body)
-    console.log(resp.data)
     return resp.data
 
 }

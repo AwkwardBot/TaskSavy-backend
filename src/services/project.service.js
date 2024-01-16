@@ -18,7 +18,7 @@ const createProject = async (projectBody, userId) => {
             role: 'Admin'
         }
     ];
-w
+
     const project = await Project.create(projectBody);
     await ticketTypeService.createTicketType(project.id);
     return project;
@@ -249,7 +249,10 @@ const getMemberById = async (project, memberId) => {
 
 const addMember = async (project, member) => {
     var user = await userService.getUserByEmail(member.email);
-    project.members.push({ userId: user._id, role: member.role });
+    if(project.members.includes({userId: user._id})){
+        throw new ApiError(httpStatus.BAD_REQUEST, "The given ID already exists")
+    }
+    project.members.push({ userId: user._id, role: member.role, tag: member.tag });
 
     await project.save();
     return project;

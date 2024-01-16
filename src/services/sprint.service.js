@@ -32,16 +32,17 @@ const getSprints = async (projectId) => {
 
 /**
  * Get Sprint By Id
- * @param {Obejct} sprintId
- * @param {Obejct} projectId
- * @param {Obejct} userId
- * @returns {Promise<>}
+ * @param {Object} sprintId
+ * @param {Object} projectId
+ * @param {Object} userId
+ * @returns {Promise<Sprint>}
  */
 
-const getSprintById = async (sprintId) => {
+const getSprintById = async (projectId, sprintId) => {
 
     const sprint = Sprint.findOne({
-        _id: sprintId
+        _id: sprintId,
+        projectId: projectId
     });
 
     if (!sprint) {
@@ -52,8 +53,8 @@ const getSprintById = async (sprintId) => {
 };
 
 
-const updateSprint = async(sprintId, body) => {
-    const sprint = await Sprint.findById(sprintId)
+const updateSprint = async(projectId, sprintId, body) => {
+    const sprint = await Sprint.findOne({_id: sprintId, projectId: projectId})
     if(!sprint)
         throw new ApiError(httpStatus.NOT_FOUND, "Sprint does not exist");
 
@@ -61,6 +62,7 @@ const updateSprint = async(sprintId, body) => {
     await sprint.save()
     return sprint
 }
+
 
 
 const deleteSprint = async(sprintId) =>{

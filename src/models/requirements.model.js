@@ -16,17 +16,16 @@ const RequirementsSchema = mongoose.Schema({
             },
             requirement: {
                 type: String,
-
             },
             class: {
                 type: String,
             
             },
-            type: {
-                type: String,
-                enum: ['functional', 'non-functional']
-
-            }
+            ambiguity: [
+                {
+                  type: String  
+                }
+            ]
         }
     ]
 })
