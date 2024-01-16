@@ -19,13 +19,11 @@ const RequirementsSchema = mongoose.Schema({
             },
             class: {
                 type: String,
-            
             },
-            ambiguity: [
-                {
+            ambiguity:{
                   type: String  
-                }
-            ]
+            }
+            
         }
     ]
 })

@@ -8,6 +8,8 @@ const projectAccess = async (req, res, next) => {
     const userId = req.user._id
 
     const project = await Project.findOne({ _id: projectId });
+
+    console.log(project)
     
     if (!project) {
         return next(new ApiError(httpStatus.NOT_FOUND, "Project not Found"))
