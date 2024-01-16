@@ -86,6 +86,9 @@ const projectSchema = mongoose.Schema({
         enum: ['Admin', 'Manager', 'Member'],
         required: true,
       },
+      tag: {
+        type: String
+      }
     },
   ],
 });

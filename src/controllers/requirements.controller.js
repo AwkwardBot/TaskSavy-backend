@@ -92,10 +92,8 @@ exports.getModule = catchAsync(async (req, res) => {
 })
 
 exports.checkReq = catchAsync(async (req,res) => {
-    console.log(req.body)
-
+    
     const data = await requirementsService.checkReq(req.body.requirement)
-
     res.status(httpStatus.OK).send(data)
 
 })

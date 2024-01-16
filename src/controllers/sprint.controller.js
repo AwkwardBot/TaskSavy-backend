@@ -32,8 +32,7 @@ const getSprints = catchAsync(async (req, res) => {
 const getSprint = catchAsync(async (req, res) => {
     const sprint = await sprintService.getSprintById(
         req.params.sprintId,
-        req.params.projectId,
-        req.user._id
+        req.params.projectId
     );
     if (!sprint) {
         throw new ApiError(httpStatus.NOT_FOUND, 'Project not found');
@@ -42,11 +41,21 @@ const getSprint = catchAsync(async (req, res) => {
 });
 
 
-const changeSprintStatus = catchAsync(async (req, res) => {});
+const changeSprintStatus = catchAsync(async (req, res) => {
+
+    const status = {status: req.body.status}
+    const {projectId, sprintId} = req.params
+
+    const sprint = await sprintService.updateSprint(projectId, sprintId, status)
+    res.status(httpStatus.NO_CONTENT).send()
+
+});
 
 const updateSprint = catchAsync(async (req, res) => {
 
-    const sprint = await sprintService.updateSprint(req.params.sprintId, req.body)
+    const {projectId, sprintId} = req.params
+
+    const sprint = await sprintService.updateSprint(projectId, sprintId, req.body)
     res.status(httpStatus.OK).send(sprint)
 
 });
