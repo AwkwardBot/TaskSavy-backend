@@ -31,11 +31,12 @@ const getSprints = catchAsync(async (req, res) => {
 
 const getSprint = catchAsync(async (req, res) => {
     const sprint = await sprintService.getSprintById(
-        req.params.sprintId,
-        req.params.projectId
+        req.params.projectId,
+        req.params.sprintId
+        
     );
     if (!sprint) {
-        throw new ApiError(httpStatus.NOT_FOUND, 'Project not found');
+        throw new ApiError(httpStatus.NOT_FOUND, 'Sprint not found');
     }
     res.status(httpStatus.OK).send(sprint);
 });

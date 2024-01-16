@@ -51,7 +51,7 @@ const updateTicket = async (ticketId, ticketBody) => {
             };
         }
 
-        if (!ticketBody.sprint) {
+        if (!ticketBody.sprint && ticketBody.description) {
             console.log("Deleting Ticket");
             ticket.sprint = undefined;
             ticketBody.sprint = undefined;
@@ -59,11 +59,8 @@ const updateTicket = async (ticketId, ticketBody) => {
         }
 
         console.log("Ticket Update Body:", ticketBody);
-
         Object.assign(ticket, ticketBody);
-
         console.log("Updated Ticket:", ticket);
-        
         const updatedTicket = await ticket.save();
 
         return {

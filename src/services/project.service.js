@@ -218,7 +218,8 @@ const getMembersDetail = async (project) => {
             _id: detailuser._id,
             email: detailuser.email,
             name: detailuser.name,
-            role: member.role
+            role: member.role,
+            tag: member.tag
         };
         memberDetails.push(user);
     }
@@ -249,9 +250,17 @@ const getMemberById = async (project, memberId) => {
 
 const addMember = async (project, member) => {
     var user = await userService.getUserByEmail(member.email);
-    if(project.members.includes({userId: user._id})){
-        throw new ApiError(httpStatus.BAD_REQUEST, "The given ID already exists")
+    if(!user){
+        throw new ApiError(httpStatus.BAD_REQUEST, "User does not exist") 
     }
+    project.members.forEach((e, i)=> {
+        console.log(e.userId, user._id,  String(e.userId) === String(user._id) )
+        if(String(e.userId) === String(user._id))
+            throw new ApiError(httpStatus.BAD_REQUEST, "The given ID already exists")
+    })
+
+
+
     project.members.push({ userId: user._id, role: member.role, tag: member.tag });
 
     await project.save();

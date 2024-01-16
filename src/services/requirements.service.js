@@ -100,8 +100,12 @@ const addRequirementToModule = async (projectId, moduleId, requirementBody) => {
     });
 
 
-    
+
     if (!reqModule) throw new ApiError(httpStatus.NOT_FOUND, 'Module not Found');
+
+    requirementBody.ambiguity = await checkReq(requirementBody.requirement)
+    requirementBody.class = await classifyReq(requirementBody.requirement)
+
     reqModule.requirements.push(requirementBody);
     reqModule.save();
     return reqModule;
@@ -143,7 +147,14 @@ const getModuleById = async (projectId, moduleId) => {
 const checkReq = async (requirement) => {
     var body = {"text": requirement}
     const resp = await axios.post("http://summary.tasksavy.site/analyze_fr", body)
-    return resp.data
+    return resp.data.most_common_ambiguity
+
+}
+
+const classifyReq = async (requirement) => {
+    var body = {"text": requirement}
+    const resp = await axios.post("http://127.0.0.1:5000/predict", body)
+    return resp.data.label
 
 }
 
@@ -157,5 +168,6 @@ module.exports = {
     updateModuleById,
     deleteModuleById,
     getModuleById,
-    checkReq
+    checkReq,
+    classifyReq
 };
