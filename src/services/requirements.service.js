@@ -83,12 +83,8 @@ const deleteRequirement = async (projectId, moduleId, reqId) => {
         }
     );
 
-    
-
 
     if (!req) throw new ApiError(httpStatus.NOT_FOUND, 'Requirement not found');
-
-    
 
     return req;
 };
@@ -107,6 +103,7 @@ const addRequirementToModule = async (projectId, moduleId, requirementBody) => {
     requirementBody.class = await classifyReq(requirementBody.requirement)
 
     reqModule.requirements.push(requirementBody);
+    
     reqModule.save();
     return reqModule;
 };
@@ -153,8 +150,8 @@ const checkReq = async (requirement) => {
 
 const classifyReq = async (requirement) => {
     var body = {"text": requirement}
-    const resp = await axios.post("http://127.0.0.1:5000/predict", body)
-    return resp.data.label
+    const resp = await axios.post("http://10.135.16.208:5050/predict", body)
+    return resp.data.class
 
 }
 

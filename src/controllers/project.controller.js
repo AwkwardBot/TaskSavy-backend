@@ -44,8 +44,13 @@ const updateProject = catchAsync(async (req, res) => {
 
 const deleteProject = catchAsync(async (req, res)=> {
 
-    const status = await projectService.deleteProject(
-        req.params.projectId    
+    // const status = await projectService.deleteProject(
+    //     req.params.projectId    
+    // )
+
+    const status = await projectService.changeActiveStatus(
+        req.project,
+        "Archive"
     )
 
     if(!status) {
